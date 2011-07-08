@@ -192,6 +192,8 @@ namespace HttpRulesCore.Actions
         private bool UpdatePatterns()
         {
             var filename = this.Url.AbsoluteUri.MD5Hash() + ".abp";
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            filename = Path.Combine(appData, "HttpRules", filename);
             var exists = File.Exists(filename);
             if (!exists ||
                 (DateTime.UtcNow - new FileInfo(filename).LastWriteTimeUtc).TotalHours > this.UpdateFrequencyHours)
@@ -200,20 +202,18 @@ namespace HttpRulesCore.Actions
                 {
                     var request = WebRequest.Create(this.Url);
                     var response = request.GetResponse();
-                    if (response != null)
+                    using (var stream = response.GetResponseStream())
                     {
-                        using (var stream = response.GetResponseStream())
+                        if (stream != null)
                         {
-                            if (stream != null)
+                            using (var ms = new MemoryStream())
                             {
-                                using (var ms = new MemoryStream())
-                                {
-                                    stream.CopyTo(ms);
-                                    var bytes = new byte[ms.Length];
-                                    ms.Seek(0, SeekOrigin.Begin);
-                                    ms.Read(bytes, 0, (int) ms.Length);
-                                    File.WriteAllBytes(filename, bytes);
-                                }
+                                stream.CopyTo(ms);
+                                var bytes = new byte[ms.Length];
+                                ms.Seek(0, SeekOrigin.Begin);
+                                ms.Read(bytes, 0, (int) ms.Length);
+                                Directory.CreateDirectory(Path.GetDirectoryName(filename));
+                                File.WriteAllBytes(filename, bytes);
                             }
                         }
                     }
@@ -230,9 +230,12 @@ namespace HttpRulesCore.Actions
 
             try
             {
-                using (var stream = File.OpenRead(filename))
+                if (filename != null)
                 {
-                    this.ReadStream(stream);
+                    using (var stream = File.OpenRead(filename))
+                    {
+                        this.ReadStream(stream);
+                    }
                 }
             }
             catch (IOException)
