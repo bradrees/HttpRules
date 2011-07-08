@@ -1,0 +1,211 @@
+﻿<Window x:Class="RulesWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        mc:Ignorable="d" 
+        
+        Title="Filterama" WindowStyle="None" ResizeMode="NoResize" 
+        OverridesDefaultStyle="False" Visibility="Collapsed" 
+        Height="235" Width="400" HorizontalAlignment="Left" VerticalAlignment="Top" 
+        Left="0" Top="0" 
+        ShowInTaskbar="False" Icon="/RulesWPF;component/Icons/Earth.ico" BorderThickness="1">
+    <Window.CommandBindings>
+        <CommandBinding
+        Command="ApplicationCommands.Copy"
+        Executed="CopyCommandHandler"
+        CanExecute="CanCopyExecuteHandler" />
+    </Window.CommandBindings>
+    <Grid Margin="0,0,0,0" SnapsToDevicePixels="True" Height="237" Width="404">        
+        
+        <tb:TaskbarIcon Name="tb" ToolTipText="Show/Hide" IconSource="Icons/Earth.ico" >
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Close" Name="cmClose" Click="Close" />
+                    <Separator />
+                    <MenuItem Header="View/Edit Rules" Name="cmRules" Click="CmRulesClick" />
+                    <Separator />
+                    <MenuItem Header="Disable Logging" Name="cmToggleLogging" Click="CmToggleLoggingClick" />
+                    <MenuItem Header="Disable" Name="cmToggle" Click="CmToggleClick" />
+                    <Separator />
+                    <MenuItem Header="Clear Logs/Traffic" Name="cmClear" Click="CmClearClick" />
+                </ContextMenu>
+                </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+        <TabControl HorizontalAlignment="Stretch" Margin="-3,-3,0,0" Padding="0,0,0,0" Name="tabControl" VerticalAlignment="Stretch" TabStripPlacement="Bottom" UseLayoutRounding="True">
+            <TabItem Header="Log" Name="tabLog" Width="134" Height="30" FontWeight="SemiBold">
+                <Grid>
+                    <Canvas HorizontalAlignment="Stretch" Margin="0,0,0,0" Name="canvasLog" VerticalAlignment="Stretch" >
+                        <Canvas.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="White" Offset="1" />
+                                <GradientStop Color="#FFEBF0FF" Offset="0" />
+                            </LinearGradientBrush>
+                        </Canvas.Background>
+                        <Canvas Name="pnlLog" Width="{Binding ElementName=canvas, Path=ActualWidth}" Height="{Binding ElementName=canvas, Path=ActualHeight}" >
+                            <ListView Margin="5" Height="198" Name="lvLog" Width="392" ItemsSource="{Binding}" FontWeight="Regular">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Width="170" Header="Rule">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock>
+                                            <Hyperlink TextDecorations="None" Click="RuleClick" >
+                                                <Run Text="{Binding RuleName}" />
+                                            </Hyperlink>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Information" Width="191" >
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock>                                            
+                                            <Run Text="{Binding Message}" />  
+                                            <TextBlock.ToolTip>
+                                                <ToolTip>
+                                                    <TextBlock>
+                                                        <Run Text="{Binding Url}" />
+                                                    </TextBlock>                                            
+                                                </ToolTip> 
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </Canvas>
+                    </Canvas>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Traffic" Name="tabTraffic" Width="133" Height="30" FontWeight="SemiBold">
+                <Grid>
+                    <Canvas HorizontalAlignment="Stretch" Margin="0,0,0,0" Name="canvasTraffic" VerticalAlignment="Stretch" >
+                        <Canvas.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="White" Offset="1" />
+                                <GradientStop Color="#FFEBF0FF" Offset="0" />
+                            </LinearGradientBrush>
+                        </Canvas.Background>
+                        <Canvas Name="pnlTraffic" Width="{Binding ElementName=canvas, Path=ActualWidth}" Height="{Binding ElementName=canvas, Path=ActualHeight}" >
+                            <ListView Margin="5" Height="198" Name="lvTraffic" Width="392" ItemsSource="{Binding}" FontWeight="Regular">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Width="110" Header="Result">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock>              
+                                                        <Run Text="{Binding ResponseCodeText}" />   
+                                                        <TextBlock.ToolTip>
+                                                            <ToolTip>
+                                                                <TextBlock>
+                                                                    <Run Text="{Binding ResponseCodeText}" />
+                                                                </TextBlock>                                            
+                                                            </ToolTip> 
+                                                        </TextBlock.ToolTip>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Url" Width="251" >
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock>                                            
+                                                        <Run Text="{Binding FullUrl}" />  
+                                                        <TextBlock.ToolTip>
+                                                            <ToolTip>
+                                                                <TextBlock>
+                                                                    <Run Text="{Binding FullUrl}" />
+                                                                </TextBlock>                                            
+                                                            </ToolTip> 
+                                                        </TextBlock.ToolTip>
+                                                        <TextBlock.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="ApplicationCommands.Copy" />
+                                                            </ContextMenu>                                                            
+                                                        </TextBlock.ContextMenu>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </Canvas>
+                    </Canvas>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Rules" Name="tabRules" Width="134" Height="30" FontWeight="SemiBold">
+                <Grid>
+                    <Canvas HorizontalAlignment="Stretch" Margin="0,0,0,0" Name="canvasRules" VerticalAlignment="Stretch" >
+                        <Canvas.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="White" Offset="1" />
+                                <GradientStop Color="#FFEBF0FF" Offset="0" />
+                            </LinearGradientBrush>
+                        </Canvas.Background>
+                        <Canvas Name="pnlRules" Width="{Binding ElementName=canvas, Path=ActualWidth}" Height="{Binding ElementName=canvas, Path=ActualHeight}" >
+                            <ListView Margin="5" Height="198" Name="lvRules" Width="392" ItemsSource="{Binding}" FontWeight="Regular">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Width="30" Header="Run">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock>              
+                                                        <CheckBox IsChecked="{Binding Enabled}"></CheckBox>   
+                                                        <TextBlock.ToolTip>
+                                                            <ToolTip>
+                                                                <TextBlock>
+                                                                    <Run Text="Check to enable this rule." />
+                                                                </TextBlock>                                            
+                                                            </ToolTip> 
+                                                        </TextBlock.ToolTip>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Width="30" Header="Log">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock>              
+                                                        <CheckBox IsChecked="{Binding LogEnabled}"></CheckBox>   
+                                                        <TextBlock.ToolTip>
+                                                            <ToolTip>
+                                                                <TextBlock>
+                                                                    <Run Text="Check to enable a log entry when this rule is run." />
+                                                                </TextBlock>                                            
+                                                            </ToolTip> 
+                                                        </TextBlock.ToolTip>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Name" Width="301" >
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock>                                            
+                                                        <Run Text="{Binding Name}" />  
+                                                        <TextBlock.ToolTip>
+                                                            <ToolTip>
+                                                                <TextBlock>
+                                                                    <Run Text="{Binding Name}" />
+                                                                </TextBlock>                                            
+                                                            </ToolTip> 
+                                                        </TextBlock.ToolTip>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </Canvas>
+                    </Canvas>
+                </Grid>
+            </TabItem>            
+        </TabControl>
+    </Grid>
+</Window>

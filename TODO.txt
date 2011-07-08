@@ -1,0 +1,15 @@
+
+UI
+	Copy rules to clipboard
+	Copy url to clipboard
+	Create name/logo
+	Context menus for url (create rule from url)
+
+Rules
+	Save rule changes to disk - done
+	Add editor for rules
+
+Engine
+	Cache AdBlock style rules
+	Add error logging
+

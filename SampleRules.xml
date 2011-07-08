@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rules>
+  <!-- White lists -->
+  <rule name="Whitelist" enabled="false">
+    <match>||blinkbox.com^$thirdparty</match>
+    <actions>
+      <request>
+        <break />
+      </request>
+      <response>
+        <break />
+      </response>
+    </actions>
+  </rule>
+  <!-- Black lists -->
+  <rule name="Python Example Block">
+    <match>||www.example.com</match>
+    <actions>
+      <python>
+        session.oRequest.FailSession(403, "Forbidden By Proxy", "Request blocked due to the rule: " + rule.Name)
+        True
+      </python>
+    </actions>
+  </rule>
+  <rule name="Facebook 'like' Block">
+    <matches>
+      <match>||facebook.com/plugins/like.php</match>
+      <match>||facebook.com/plugins/recommendations.php</match>
+      <match>||facebook.com/plugins/likebox.php</match>
+      <match>||connect.facebook.net/en_US/all.js</match>
+      <match>||facebook.com/extern/login_status.php</match>
+      <match>||facebook.com/widget/</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Google Analytics Block">
+    <match>||google-analytics.com</match>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="DoubleClick Block">
+    <matches>
+      <match>||doubleclick.net</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="AdBlock">
+    <actions>
+      <adblock url="https://easylist-downloads.adblockplus.org/easylist_noelemhide.txt" />
+    </actions>
+  </rule>
+  <!-- Redirects -->
+  <rule name="HttpsEverywhere">
+    <actions>
+      <httpseverywhere path="Rules\HttpsEverywhere" fakeHttps="false" />
+    </actions>
+  </rule>
+  <rule name="Google search result click">
+    <match>||google.com/url</match>
+    <match>||google.co.uk/url</match>
+    <actions>
+      <python>
+        <![CDATA[
+from System import Uri
+querystring = session.PathAndQuery
+startindex = querystring.index("&url=")
+endindex = querystring.index("&ei", startindex)
+url = querystring[startindex + 5:endindex]
+session.url = Uri.UnescapeDataString(url)[7:]
+False
+      ]]>
+      </python>
+    </actions>
+  </rule>
+  <!-- Request modifiers -->
+  <rule name="Google Search (no cookies)">
+    <matches>
+      <match>/google.com?.?(uk|au)?/(search|csi|maps|product|images|videosearch)/</match>
+    </matches>
+    <paths>
+      <path>/search</path>
+      <path>/csi</path>
+      <path>/maps</path>
+      <path>/product</path>
+      <path>/images</path>
+      <path>/videoSearch</path>
+    </paths>
+    <actions>
+      <header name="Accept-Encoding">
+        <removeValue type="delimited" delimiter=",">sdch</removeValue>
+      </header>
+      <cookie name="PREF">
+        <remove />
+      </cookie>
+      <cookie name="SID">
+        <remove />
+      </cookie>
+      <cookie name="NID">
+        <remove />
+      </cookie>
+      <cookie name="HSID">
+        <remove />
+      </cookie>
+    </actions>
+  </rule>
+  <rule name="Referer Header Block" logEnabled="false">
+    <actions>
+      <header name="Referer">
+        <remove />
+      </header>
+    </actions>
+  </rule>
+  <rule name="facebook Auto login">
+    <match>||facebook.com</match>
+    <actions>
+      <respond path="/login.php" method="post" url="https://login.facebook.com/login.php?login_attempts=1">
+        <value key="email">#{Email}</value>
+        <value key="pass">#{Password}</value>
+      </respond>
+      <cookie name="lxe">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+      <cookie name="c_user">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+      <cookie name="datr">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+      <cookie name="lo">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+      <cookie name="sct">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+      <cookie name="presence">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+      <cookie name="lsd">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+    </actions>
+  </rule>
+</rules>

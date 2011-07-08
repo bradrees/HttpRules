@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="HttpRules">
+</Property><Property Name="Solution File" Value="L:\Dev\HttpRules\HttpRules\HttpRules.sln">
+</Property><Property Name="Date" Value="23 May 2010">
+</Property><Property Name="Time" Value="23:01:02">
+</Property></Properties><Event ErrorLevel="0" Project="NotifyIconWpf" Source="NotifyIconWpf\NotifyIconWpf.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="NotifyIconWpf" Source="NotifyIconWpf\NotifyIconWpf.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="NotifyIconWpf" Source="NotifyIconWpf\NotifyIconWpf.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

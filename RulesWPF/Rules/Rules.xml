@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rules>
+  <!-- White lists -->
+  <rule name="Whitelist" enabled="false">
+    <match>||blinkbox.com^$thirdparty</match>
+    <actions>
+      <request>
+        <break />
+      </request>
+      <response>
+        <break />
+      </response>
+    </actions>
+  </rule>
+  <!-- Black lists -->
+  <rule name="Python Example Block">
+    <match>||www.example.com</match>
+    <actions>
+      <python>
+session.oRequest.FailSession(403, "Forbidden By Proxy", "Request blocked due to the rule: " + rule.Name)
+True
+      </python>
+    </actions>
+  </rule>
+  <rule name="Facebook 'like' Block">
+    <matches>
+      <match>||facebook.com/plugins/like.php</match>
+      <match>||facebook.com/plugins/recommendations.php</match>
+      <match>||facebook.com/plugins/likebox.php</match>
+      <match>||facebook.com/plugins/activity.php</match>
+      <match>||connect.facebook.net/en_US/all.js</match>
+      <match>||facebook.com/extern/login_status.php</match>
+      <match>||facebook.com/widget/</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Google Analytics Block">
+    <match>||google-analytics.com</match>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="DoubleClick Block">
+    <matches>
+      <match>||doubleclick.net</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Scorecard Research Block">
+    <matches>
+        <match>||scorecardresearch.com</match>
+    </matches>
+    <actions>
+        <block />
+    </actions>
+  </rule>
+  <rule name="MSN Messenger Ads Block">
+    <matches>
+        <match>||catalog.video.msn.com</match>
+    </matches>
+    <actions>
+        <block />
+    </actions>
+  </rule>
+  <rule name="AdBlock (Easylist)">
+    <actions>
+      <adblock url="https://easylist-downloads.adblockplus.org/easylist_noelemhide.txt" />
+    </actions>
+  </rule>
+  <rule name="AdBlock Tracking (Easylist)">
+    <actions>
+      <adblock url="https://easylist-downloads.adblockplus.org/easyprivacy.txt" />
+    </actions>
+  </rule>
+  <rule name="AdBlock Tracking (Fanboy)" enabled="false">
+    <actions>
+      <adblock url="https://secure.fanboy.co.nz/fanboy-tracking.txt" />            
+    </actions>        
+  </rule>
+  <rule name="Age Filter" enabled="true">
+    <match>||bradleyrees.com</match>
+    <actions>
+      <request>
+        <ageFilter dateOfBirth="1/1/1998" countryCode="GB" />
+      </request>
+      <response>
+        <ageFilter dateOfBirth="1/1/1998" countryCode="GB" />
+      </response>
+    </actions>
+  </rule>
+  <!-- Privacy modifiers -->
+  <rule name="Google Search (no cookies)">
+    <matches>
+      <match>/google\.co[m]?\.?(uk|au)?/(search|csi|maps|product|images|videosearch|$)/</match>
+    </matches>
+    <actions>
+      <header name="Accept-Encoding">
+        <removeValue type="delimited" delimiter=",">sdch</removeValue>
+      </header>
+      <cookie name="PREF">
+        <remove />
+      </cookie>
+      <cookie name="SID">
+        <remove />
+      </cookie>
+      <cookie name="NID">
+        <remove />
+      </cookie>
+      <cookie name="HSID">
+        <remove />
+      </cookie>
+      <break />
+    </actions>   
+  </rule>
+  <rule name="Google search 204">
+    <match>||google.com/generate_204</match>
+    <match>||google.co.uk/generate_204</match>
+    <match>||google.com/gen_204</match>
+    <match>||google.co.uk/gen_204</match>
+    <actions>
+      <python>
+        <![CDATA[
+import clr
+clr.AddReference("HttpRulesCore")
+from HttpRulesCore import Extensions
+Extensions.NoContentSession(session)
+False
+      ]]>
+      </python>
+    </actions>
+  </rule>
+  <!-- Redirects -->
+  <rule name="HttpsEverywhere">
+    <actions>
+      <httpseverywhere path="Rules\HttpsEverywhere" fakeHttps="false" />
+    </actions>
+  </rule>
+  <rule name="Google search result click">
+    <match>||google.com/url</match>
+    <match>||google.co.uk/url</match>
+    <actions>
+      <python>
+        <![CDATA[
+import clr
+clr.AddReference("HttpRulesCore")
+from System import Uri
+from HttpRulesCore import Extensions
+querystring = session.PathAndQuery
+startindex = querystring.index("&url=")
+endindex = querystring.index("&ei", startindex)
+url = querystring[startindex + 5:endindex]
+# session.url = Uri.UnescapeDataString(url)[7:]
+Extensions.RedirectSession(session, Uri.UnescapeDataString(url), False)
+False
+      ]]>
+      </python>
+    </actions>
+  </rule>
+  <!-- Request modifiers -->
+  <rule name="Referer Header Block" logEnabled="false">
+    <actions>
+      <header name="Referer">
+        <remove />
+      </header>
+    </actions>
+  </rule>
+  <!--<rule name="facebook Auto login">
+    <match>||facebook.com</match>
+    <actions>
+      <respond path="/login.php" method="post" url="https://login.facebook.com/login.php?login_attempts=1">
+        <value key="email">#{Email}</value>
+        <value key="pass">#{Password}</value>
+      </respond>
+      <cookie name="lxe">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+      <cookie name="c_user">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+      <cookie name="datr">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+      <cookie name="lo">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+      <cookie name="sct">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+      <cookie name="presence">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+      <cookie name="lsd">
+        <keep timeout="3600" path="/login.php" />
+      </cookie>
+    </actions>
+  </rule>-->
+  <rule name="Save Video Files">
+    <actions>
+      <saveFile extensions="mpg,mp4,flv"></saveFile>
+    </actions>
+  </rule>
+</rules>

@@ -1,0 +1,3 @@
+<ruleset name="Live">
+  <rule from="^http://(login|onecare)\.live\.com/" to="https://$1.live.com/"/>
+</ruleset>
