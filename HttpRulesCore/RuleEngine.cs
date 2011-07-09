@@ -110,8 +110,8 @@ namespace HttpRulesCore
         {
             try
             {
-                this.Serialize().Save(this._path);
                 FiddlerApplication.Shutdown();
+                this.Serialize().Save(this._path);
                 var startedShutdown = DateTime.UtcNow;
                 while (FiddlerApplication.isClosing && (DateTime.UtcNow - startedShutdown).TotalSeconds < 10)
                 {

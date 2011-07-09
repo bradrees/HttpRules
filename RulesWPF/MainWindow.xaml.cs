@@ -53,7 +53,7 @@ namespace RulesWPF
         {
             this.InitializeComponent();
 
-            this.rulePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Rules\Rules.xml");
+            this.rulePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), @"HttpRules\Rules.xml");
 
             this.engine = new RuleEngine();
 
@@ -115,9 +115,9 @@ namespace RulesWPF
         /// </param>
         protected override void OnClosed(EventArgs e)
         {
-            base.OnClosed(e);
-
             this.engine.Shutdown();
+
+            base.OnClosed(e);
         }
 
         /// <summary>

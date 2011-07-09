@@ -192,7 +192,7 @@ namespace HttpRulesCore.Actions
         private bool UpdatePatterns()
         {
             var filename = this.Url.AbsoluteUri.MD5Hash() + ".abp";
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             filename = Path.Combine(appData, "HttpRules", filename);
             var exists = File.Exists(filename);
             if (!exists ||
