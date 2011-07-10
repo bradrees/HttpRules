@@ -105,18 +105,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_97CD4769E6ACF5B21FA900F2EF066AAC"
-        "OwnerKey" = "8:_8DBF6E4B269F4E2781E17662AF6EF326"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_97CD4769E6ACF5B21FA900F2EF066AAC"
-        "OwnerKey" = "8:_2C9B335523D1EA068B26407D0F035573"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_CF2C16F9FD72B9596C25DF296C9936B9"
         "OwnerKey" = "8:_2A17BA0E7AB061ED1F119C0E682DCD83"
         "MsmSig" = "8:_UNDEFINED"
@@ -129,8 +117,26 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_FF4CFF4308B61B302F12A51689591A3E"
+        "OwnerKey" = "8:_8DBF6E4B269F4E2781E17662AF6EF326"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FF4CFF4308B61B302F12A51689591A3E"
+        "OwnerKey" = "8:_2C9B335523D1EA068B26407D0F035573"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_8DBF6E4B269F4E2781E17662AF6EF326"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_FF4CFF4308B61B302F12A51689591A3E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -167,12 +173,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_4A8DB82C4EC45728BA81C1C3D2CEC025"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_97CD4769E6ACF5B21FA900F2EF066AAC"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -475,20 +475,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_97CD4769E6ACF5B21FA900F2EF066AAC"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CF2C16F9FD72B9596C25DF296C9936B9"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:FiddlerCore, Version=2.3.0.9, Culture=neutral, PublicKeyToken=67cb91587178ac5a, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Scripting.Debugging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_97CD4769E6ACF5B21FA900F2EF066AAC"
+                    "_CF2C16F9FD72B9596C25DF296C9936B9"
                     {
-                    "Name" = "8:FiddlerCore.dll"
+                    "Name" = "8:Microsoft.Scripting.Debugging.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:FiddlerCore.dll"
+            "SourcePath" = "8:Microsoft.Scripting.Debugging.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5CFB49B5C8844557B18DC8B5AF5B7899"
@@ -506,20 +506,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CF2C16F9FD72B9596C25DF296C9936B9"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FF4CFF4308B61B302F12A51689591A3E"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Scripting.Debugging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:FiddlerCore4, Version=2.3.4.0, Culture=neutral, PublicKeyToken=67cb91587178ac5a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_CF2C16F9FD72B9596C25DF296C9936B9"
+                    "_FF4CFF4308B61B302F12A51689591A3E"
                     {
-                    "Name" = "8:Microsoft.Scripting.Debugging.dll"
+                    "Name" = "8:FiddlerCore4.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Microsoft.Scripting.Debugging.dll"
+            "SourcePath" = "8:FiddlerCore4.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5CFB49B5C8844557B18DC8B5AF5B7899"
@@ -638,15 +638,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:HttpRules"
-        "ProductCode" = "8:{F2061D2D-24D4-4706-AE0A-B8D4B565CFC0}"
-        "PackageCode" = "8:{87CE3CB2-296D-453A-B616-037DB0018361}"
+        "ProductCode" = "8:{CDDAD77C-E7D2-4127-BF97-A223ABE98EEA}"
+        "PackageCode" = "8:{ACC54460-8C2E-4A2A-B8B2-52A1DAB0388F}"
         "UpgradeCode" = "8:{ECF4051C-EEB5-437C-BC36-C78B33EE11AB}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.1"
+        "ProductVersion" = "8:1.0.2"
         "Manufacturer" = "8:Brad Rees"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
