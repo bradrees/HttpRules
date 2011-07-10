@@ -384,15 +384,22 @@ namespace RulesWPF
         /// </param>
         private void TbMouseLeftButtonUp(object sender, RoutedEventArgs e)
         {
-            switch (this.Visibility)
+            if (this.Topmost)
             {
-                case Visibility.Visible:
-                    this.Visibility = Visibility.Collapsed;
-                    break;
-                case Visibility.Collapsed:
-                    this.Visibility = Visibility.Visible;
-                    this.Activate();
-                    break;
+                switch (this.Visibility)
+                {
+                    case Visibility.Visible:
+                        this.Visibility = Visibility.Collapsed;
+                        break;
+                    case Visibility.Collapsed:
+                        this.Visibility = Visibility.Visible;
+                        this.Activate();
+                        break;
+                }
+            }
+            else
+            {
+                this.Topmost = true;
             }
         }
 

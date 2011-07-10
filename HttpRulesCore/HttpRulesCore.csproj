@@ -31,9 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FiddlerCore, Version=2.2.9.0, Culture=neutral, PublicKeyToken=67cb91587178ac5a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Referenced Assemblies\FiddlerCore.dll</HintPath>
+    <Reference Include="FiddlerCore4">
+      <HintPath>..\Referenced Assemblies\FiddlerCore4.dll</HintPath>
     </Reference>
     <Reference Include="IronPython">
       <HintPath>..\Referenced Assemblies\IronPython.dll</HintPath>

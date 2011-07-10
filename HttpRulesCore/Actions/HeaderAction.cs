@@ -54,10 +54,7 @@ namespace HttpRulesCore.Actions
             if (activeHeader != null)
             {
                 // Run all the sub actions.
-                foreach (var action in this.Actions)
-                {
-                    value = action.Run(session, value);
-                }
+                value = this.Actions.Aggregate(value, (current, action) => action.Run(session, current));
 
                 if (String.IsNullOrEmpty(value))
                 {
