@@ -16,7 +16,7 @@ namespace HttpRulesCore
     using System.Linq;
     using System.Xml.Linq;
 
-    using HttpRulesCore.Actions;
+    using Actions;
 
     #endregion
 
@@ -137,7 +137,7 @@ namespace HttpRulesCore
         {
             var doc = XDocument.Load(fullPath);
 
-            return doc.Root.Descendants("rule").Select(ruleXml => new Rule(ruleXml)).ToArray();
+            return doc.Root != null ? doc.Root.Descendants("rule").Select(ruleXml => new Rule(ruleXml)).ToList() : Enumerable.Empty<Rule>();
         }
 
         /// <summary>

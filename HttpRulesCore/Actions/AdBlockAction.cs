@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Xml.Linq;
 using Fiddler;
 
 namespace HttpRulesCore.Actions
 {
-    #region Using Directives
 
-    
+    #region Using Directives
 
     #endregion
 
@@ -35,12 +33,12 @@ namespace HttpRulesCore.Actions
         #region Properties
 
         /// <summary>
-        /// Backing field for the list of patterns.
+        ///   Backing field for the list of patterns.
         /// </summary>
         private UriMatchList _patternList;
 
         /// <summary>
-        /// the patterns that are used by this rule.
+        ///   the patterns that are used by this rule.
         /// </summary>
         private IList<UriPattern> _patterns;
 
@@ -201,6 +199,11 @@ namespace HttpRulesCore.Actions
                 try
                 {
                     var request = WebRequest.Create(this.Url);
+                    if (request.Proxy != null)
+                    {
+                        request.Proxy.Credentials = CredentialCache.DefaultCredentials;
+                    }
+
                     var response = request.GetResponse();
                     using (var stream = response.GetResponseStream())
                     {

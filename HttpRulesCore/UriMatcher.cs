@@ -202,7 +202,7 @@ namespace HttpRulesCore
         /// <summary>
         /// The pattern tokens.
         /// </summary>
-        private readonly IList<UriPatternToken> patternTokens;
+        private readonly IList<UriPatternToken> _patternTokens;
 
         #endregion
 
@@ -223,19 +223,19 @@ namespace HttpRulesCore
             this.FilterOptions = new List<Func<RequestProperties, bool>>();
 
             // Tokenize and remove empty strings.
-            this.patternTokens = this.Tokenize(pattern).Where(t => t.Type != UriPatternTokenType.String || !String.IsNullOrWhiteSpace(t.Value)).ToList();
+            this._patternTokens = this.Tokenize(pattern).Where(t => t.Type != UriPatternTokenType.String || !String.IsNullOrWhiteSpace(t.Value)).ToList();
 
-            if (this.patternTokens.Count > 0 && this.patternTokens.First().Type == UriPatternTokenType.Comment)
+            if (this._patternTokens.Count > 0 && this._patternTokens.First().Type == UriPatternTokenType.Comment)
             {
                 this.IsComment = true;
                 return;
             }
 
-            var optionsIndex = this.patternTokens.IndexOf(this.patternTokens.FirstOrDefault(t => t.Type == UriPatternTokenType.Option));
+            var optionsIndex = this._patternTokens.IndexOf(this._patternTokens.FirstOrDefault(t => t.Type == UriPatternTokenType.Option));
             if (optionsIndex > 0)
             {
-                this.ParseOptions(this.patternTokens.Skip(optionsIndex + 1).ToList());
-                this.patternTokens = this.patternTokens.Take(optionsIndex).ToList();
+                this.ParseOptions(this._patternTokens.Skip(optionsIndex + 1).ToList());
+                this._patternTokens = this._patternTokens.Take(optionsIndex).ToList();
             }
             else if (optionsIndex == 0)
             {
@@ -330,7 +330,7 @@ namespace HttpRulesCore
         /// </returns>
         public UriPatternMatchType Match(RequestProperties properties)
         {
-            return this.FilterOptions.Select(f => f.Invoke(properties)).Any() ? this.Match(properties.Uri) : UriPatternMatchType.NonMatch;
+            return (!this.FilterOptions.Any() || this.FilterOptions.Select(f => f.Invoke(properties)).Any()) ? this.Match(properties.Uri) : UriPatternMatchType.NonMatch;
         }
 
         #endregion
@@ -359,14 +359,14 @@ namespace HttpRulesCore
             var comparisonType = this.MatchCase;
             bool matchStart = false, matchEnd = false;
             var matchIndices = new List<IEnumerable<Match>>();
-            var tokenCount = this.patternTokens.Count();
+            var tokenCount = this._patternTokens.Count();
             for (var i = 0; i < tokenCount; i++)
             {
-                var token = this.patternTokens[i];
+                var token = this._patternTokens[i];
                 switch (token.Type)
                 {
                     case UriPatternTokenType.String:
-                        var stringMatches = IndicesOf(uriString, token.Value, stringIndex, comparisonType);
+                        var stringMatches = IndicesOf(uriString, token.Value, stringIndex, comparisonType).ToList();
                         if (!stringMatches.Any())
                         {
                             return UriPatternMatchType.NonMatch;
@@ -378,7 +378,7 @@ namespace HttpRulesCore
                     case UriPatternTokenType.Wildcard:
 
                         // Add From here to the end, minus the sum length of any other tokens. If the length of the remaining token is greater than the remaining length we can't match.
-                        var rangeCount = (uriString.Length - stringIndex) - this.patternTokens.Skip(i).Sum(t => t.Value.Length);
+                        var rangeCount = (uriString.Length - stringIndex) - this._patternTokens.Skip(i).Sum(t => t.Value.Length);
                         if (rangeCount < 0)
                         {
                             return UriPatternMatchType.NonMatch;
@@ -412,7 +412,7 @@ namespace HttpRulesCore
                         matchIndices.Add(new[] { new Match(0, stringIndex) });
                         break;
                     case UriPatternTokenType.Separator:
-                        var separators = IndicesOfSeparators(uriString, stringIndex);
+                        var separators = IndicesOfSeparators(uriString, stringIndex).ToList();
                         if (!separators.Any() && tokenCount == i + 1)
                         {
                             // If the last token is a separator then it can count.

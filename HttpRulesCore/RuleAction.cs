@@ -17,7 +17,7 @@ namespace HttpRulesCore
     using System.Reflection;
     using System.Xml.Linq;
 
-    using HttpRulesCore.Actions.ValueActions;
+    using Actions.ValueActions;
 
     #endregion
 
@@ -31,7 +31,7 @@ namespace HttpRulesCore
         /// <summary>
         /// A store of the value actions.
         /// </summary>
-        private static readonly Dictionary<string, Type> valueActionTypes;
+        private static readonly Dictionary<string, Type> ValueActionTypes;
 
         #endregion
 
@@ -44,9 +44,13 @@ namespace HttpRulesCore
         {
             var valueActionType = typeof(ValueAction);
 
-            valueActionTypes =
+            ValueActionTypes =
                 (from t in Assembly.GetExecutingAssembly().GetTypes() where t.IsSubclassOf(valueActionType) select t).ToDictionary(
-                    k => ((ValueAction)k.GetConstructor(new Type[] { }).Invoke(null)).NodeName, v => v);
+                    k =>
+                        {
+                            var constructorInfo = k.GetConstructor(new Type[] { });
+                            return constructorInfo != null ? ((ValueAction)constructorInfo.Invoke(null)).NodeName : null;
+                        }, v => v);
         }
 
         /// <summary>
@@ -118,12 +122,12 @@ namespace HttpRulesCore
             foreach (var valueActionXml in valueActions)
             {
                 var name = valueActionXml.Name.ToString();
-                if (valueActionTypes.ContainsKey(name))
-                {
-                    var valueAction = (ValueAction)valueActionTypes[name].GetConstructor(new Type[] { }).Invoke(null);
-                    valueAction.Deserialize(valueActionXml);
-                    result.Add(valueAction);
-                }
+                if (!ValueActionTypes.ContainsKey(name)) continue;
+                var constructorInfo = ValueActionTypes[name].GetConstructor(new Type[] { });
+                if (constructorInfo == null) continue;
+                var valueAction = (ValueAction)constructorInfo.Invoke(null);
+                valueAction.Deserialize(valueActionXml);
+                result.Add(valueAction);
             }
 
             return result;

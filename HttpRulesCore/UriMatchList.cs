@@ -38,7 +38,7 @@
             }
             set
             {
-                this._patterns = value;
+                this._patterns = value.ToList();
                 this._exceptionPatterns = this._patterns.Where(p => p.ExceptionRule).ToList();
                 this._matchPatterns = this._patterns.Where(p => !p.ExceptionRule && !p.IsComment && !p.NotSupported).ToList();
             }

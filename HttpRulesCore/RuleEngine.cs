@@ -132,7 +132,7 @@ namespace HttpRulesCore
         public void Start(string path)
         {
             this._path = path;
-            this.Rules = Rule.Parse(this._path);
+            this.Rules = Rule.Parse(this._path).ToList();
 
             this.RequestRules = (from r in this.Rules where r.RequestActions.Any() select r).ToList();
             this.ResponseRules = (from r in this.Rules where r.ResponseActions.Any() select r).ToList();
