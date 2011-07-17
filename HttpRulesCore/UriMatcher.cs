@@ -330,7 +330,7 @@ namespace HttpRulesCore
         /// </returns>
         public UriPatternMatchType Match(RequestProperties properties)
         {
-            return (!this.FilterOptions.Any() || this.FilterOptions.Select(f => f.Invoke(properties)).Any()) ? this.Match(properties.Uri) : UriPatternMatchType.NonMatch;
+            return (!this.FilterOptions.Any() || this.FilterOptions.All(f => f.Invoke(properties))) ? this.Match(properties.Uri) : UriPatternMatchType.NonMatch;
         }
 
         #endregion
@@ -670,7 +670,10 @@ namespace HttpRulesCore
                         case UriPatternTokenType.String:
                             if (parsingDomains)
                             {
-                                (inverseDomain ? this.ExcludeDomains : this.IncludeDomains).Add(token.Value);
+                                if (token.Value != "=")
+                                {
+                                    (inverseDomain ? this.ExcludeDomains : this.IncludeDomains).Add(token.Value);
+                                }
                             }
                             else
                             {
@@ -678,7 +681,7 @@ namespace HttpRulesCore
                                 {
                                     case "third-party":
                                         var inverseTp = inverse;
-                                        this.FilterOptions.Add(r => inverseTp ^ !(r.Referer.HasValue() && r.Referer.Host.EqualsCIS(r.Uri.Host)));
+                                        this.FilterOptions.Add(r => inverseTp ^ (r.Referer.HasValue() && r.Referer.Host.EqualsCIS(r.Uri.Host)));
                                         break;
                                     case "match-case":
                                         this.MatchCase = inverse ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
@@ -686,32 +689,31 @@ namespace HttpRulesCore
                                     case "domain":
                                         parsingDomains = true;
                                         var inverseD = inverse;
-                                        this.FilterOptions.Add(
-                                            r => inverseD ^ !(this.IncludeDomains.Any(d => r.Uri.IsDomainOrSubdomain(d)) && this.ExcludeDomains.Any(d => r.Uri.IsDomainOrSubdomain(d))));
+                                        this.FilterOptions.Add(r => inverseD ^ this.MatchDomains(r));
                                         break;
                                     case "stylesheet":
                                         var inverseCss = inverse;
-                                        this.FilterOptions.Add(r => inverseCss ^ !(r.Uri.HasFileExtension("css") || r.Accept.StartsWith("text/css")));
+                                        this.FilterOptions.Add(r => inverseCss ^ (r.Uri.HasFileExtension("css") || r.Accept.StartsWith("text/css")));
                                         break;
                                     case "script":
                                         var inverseJs = inverse;
-                                        this.FilterOptions.Add(r => inverseJs ^ !r.Uri.HasFileExtension("js"));
+                                        this.FilterOptions.Add(r => inverseJs ^ r.Uri.HasFileExtension("js"));
                                         break;
                                     case "image": // .png, .gif, .jpg, .jpeg, .svg 
                                         var inverseImg = inverse;
-                                        this.FilterOptions.Add(r => inverseImg ^ !r.Uri.HasFileExtension("jpg", "png", "gif", "jpeg", "svg"));
+                                        this.FilterOptions.Add(r => inverseImg ^ r.Uri.HasFileExtension("jpg", "png", "gif", "jpeg", "svg"));
                                         break;
                                     case "object": // .swf, .jar, .class, .xap
                                         var inverseObj = inverse;
-                                        this.FilterOptions.Add(r => inverseObj ^ !r.Uri.HasFileExtension("swf", "xap", "jar", "class"));
+                                        this.FilterOptions.Add(r => inverseObj ^ r.Uri.HasFileExtension("swf", "xap", "jar", "class"));
                                         break;
                                     case "object_subrequest":
                                         var inverseObjSub = inverse;
-                                        this.FilterOptions.Add(r => inverseObjSub ^ !r.Referer.HasFileExtension("swf", "xap", "jar", "class"));
+                                        this.FilterOptions.Add(r => inverseObjSub ^ r.Referer.HasFileExtension("swf", "xap", "jar", "class"));
                                         break;
                                     case "dtd": // .dtd
                                         var inverseDtd = inverse;
-                                        this.FilterOptions.Add(r => inverseDtd ^ !r.Uri.HasFileExtension("dtd"));
+                                        this.FilterOptions.Add(r => inverseDtd ^ r.Uri.HasFileExtension("dtd"));
                                         break;
                                     case "background": // NS
                                     case "xbl": // NS
@@ -737,6 +739,12 @@ namespace HttpRulesCore
                     }
                 }
             }
+        }
+
+        private bool MatchDomains(RequestProperties r)
+        {
+            var include = !this.IncludeDomains.Any() || this.IncludeDomains.Any(d => r.Uri.IsDomainOrSubdomain(d));
+            return include && (!this.ExcludeDomains.Any() || !this.ExcludeDomains.Any(d => r.Uri.IsDomainOrSubdomain(d)));
         }
 
         /// <summary>

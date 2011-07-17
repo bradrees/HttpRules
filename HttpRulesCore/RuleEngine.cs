@@ -189,9 +189,12 @@ namespace HttpRulesCore
                 return;
             }
 
-            var filteredRules = from r in this.RequestRules where r.Enabled where r.Matches == null ? true : UriPattern.Match(requestProperties, r.Matches) select r;
+            var filteredRules = from r in this.RequestRules where r.Enabled where r.Matches == null || UriPattern.Match(requestProperties, r.Matches) select r;
 
-            (from rule in filteredRules let rule1 = rule where rule.RequestActions.Any(action => action.Enabled && !action.BeforeRequest(session, rule1)) select rule).Any();
+            foreach (var rule in filteredRules.Where(rule => rule.RequestActions.Any(action => action.Enabled && !action.BeforeRequest(session, rule))))
+            {
+                break;
+            }
         }
 
         /// <summary>
@@ -204,7 +207,7 @@ namespace HttpRulesCore
         {
             var requestProperties = new RequestProperties(session.fullUrl, session.oRequest.headers["Referer"], session.oRequest.headers["Accept"]);
 
-            var filteredRules = from r in this.ResponseRules where r.Enabled where r.Matches == null ? true : UriPattern.Match(requestProperties, r.Matches) select r;
+            var filteredRules = from r in this.ResponseRules where r.Enabled where r.Matches == null || UriPattern.Match(requestProperties, r.Matches) select r;
 
             (from rule in filteredRules let rule1 = rule where rule.ResponseActions.Any(action => action.Enabled && !action.OnResponse(session, rule1)) select rule).Any();
 

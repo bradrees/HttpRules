@@ -136,12 +136,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FF4CFF4308B61B302F12A51689591A3E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_8501B037C536CE3FD8D3B9834CA9175D"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -173,6 +167,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_4A8DB82C4EC45728BA81C1C3D2CEC025"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_FF4CFF4308B61B302F12A51689591A3E"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -638,15 +638,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:HttpRules"
-        "ProductCode" = "8:{CDDAD77C-E7D2-4127-BF97-A223ABE98EEA}"
-        "PackageCode" = "8:{ACC54460-8C2E-4A2A-B8B2-52A1DAB0388F}"
+        "ProductCode" = "8:{22FB6AD6-6BED-464C-9E16-A9E87F21F197}"
+        "PackageCode" = "8:{0BE368FA-F0D2-4309-B2AB-F2362EB77AE1}"
         "UpgradeCode" = "8:{ECF4051C-EEB5-437C-BC36-C78B33EE11AB}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.2"
+        "ProductVersion" = "8:1.0.4"
         "Manufacturer" = "8:Brad Rees"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

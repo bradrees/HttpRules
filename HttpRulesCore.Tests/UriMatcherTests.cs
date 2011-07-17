@@ -101,7 +101,13 @@ namespace HttpRulesCore.Tests
             uriTest = new Uri("http://www.example.com/ads/BannerAd.gif");
             Assert.AreEqual(UriPatternMatchType.Match, new UriPattern("*/BannerAd.gif$match-case").Match(uriTest.CreateSimpleRequest()));
 
+            uriTest = new Uri("http://www.example.com/ads/BannerAd.js");
+            Assert.AreEqual(UriPatternMatchType.Match, new UriPattern("*/BannerAd$script").Match(uriTest.CreateSimpleRequest()));
+
             uriTest = new Uri("http://ad.example.com/ads/BannerAd.gif");
+            Assert.AreEqual(UriPatternMatchType.Match, new UriPattern("|http://ad.$~object_subrequest,domain=~europa.eu|~sjsu.edu|~uitm.edu.my|~uni-freiburg.de").Match(uriTest.CreateSimpleRequest()));
+
+            uriTest = new Uri("http://ad.uitm.edu.my/ads/BannerAd.gif");
             Assert.AreEqual(UriPatternMatchType.NonMatch, new UriPattern("|http://ad.$~object_subrequest,domain=~europa.eu|~sjsu.edu|~uitm.edu.my|~uni-freiburg.de").Match(uriTest.CreateSimpleRequest()));
         }
 

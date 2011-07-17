@@ -1,4 +1,6 @@
-﻿namespace HttpRulesCore
+﻿using System.Threading.Tasks;
+
+namespace HttpRulesCore
 {
     #region Using Directives
 
@@ -11,11 +13,11 @@
     {
         #region Constants and Fields
 
-        private IEnumerable<UriPattern> _exceptionPatterns;
+        private IList<UriPattern> _exceptionPatterns;
 
-        private IEnumerable<UriPattern> _matchPatterns;
+        private IList<UriPattern> _matchPatterns;
 
-        private IEnumerable<UriPattern> _patterns;
+        private IList<UriPattern> _patterns;
 
         #endregion
 
@@ -50,15 +52,36 @@
 
         public UriPatternMatchType Match(RequestProperties properties, out UriPattern matchedPattern)
         {
-            matchedPattern = this._exceptionPatterns.AsParallel().FirstOrDefault(p => p.Match(properties) == UriPatternMatchType.Exception);
-            if (matchedPattern != null)
+            var result = UriPatternMatchType.NonMatch;
+            UriPattern output = null;
+            Parallel.ForEach(this._exceptionPatterns, (p, state) => { 
+                if (p.Match(properties) == UriPatternMatchType.Exception)
+                {
+                    state.Stop();
+                    output = p;
+                    result = UriPatternMatchType.Exception;
+                }
+            });
+
+            if (result == UriPatternMatchType.Exception)
             {
-                return UriPatternMatchType.Exception;
+                matchedPattern = output;
+                return result;
             }
 
-            matchedPattern = this._matchPatterns.AsParallel().FirstOrDefault(p => p.Match(properties) == UriPatternMatchType.Match);
+            Parallel.ForEach(this._matchPatterns, (p, state) =>
+            {
+                if (p.Match(properties) == UriPatternMatchType.Match)
+                {
+                    state.Stop();
+                    output = p;
+                    result = UriPatternMatchType.Match;
+                }
+            });
 
-            return matchedPattern != null ? UriPatternMatchType.Match : UriPatternMatchType.NonMatch;
+            matchedPattern = output;
+
+            return result;
         }
 
         #endregion
