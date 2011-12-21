@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpRulesCore.Tests", "HttpRulesCore.Tests\HttpRulesCore.Tests.csproj", "{727B05D0-F836-4F6D-B61A-0D1C7EA8F648}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{C3645AC5-A6E0-4308-AC99-6960102B8BC4}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -86,12 +86,18 @@ Global
 		{727B05D0-F836-4F6D-B61A-0D1C7EA8F648}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{727B05D0-F836-4F6D-B61A-0D1C7EA8F648}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{727B05D0-F836-4F6D-B61A-0D1C7EA8F648}.Release|x86.ActiveCfg = Release|Any CPU
-		{C3645AC5-A6E0-4308-AC99-6960102B8BC4}.Debug|Any CPU.ActiveCfg = Debug
-		{C3645AC5-A6E0-4308-AC99-6960102B8BC4}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{C3645AC5-A6E0-4308-AC99-6960102B8BC4}.Debug|x86.ActiveCfg = Debug
-		{C3645AC5-A6E0-4308-AC99-6960102B8BC4}.Release|Any CPU.ActiveCfg = Release
-		{C3645AC5-A6E0-4308-AC99-6960102B8BC4}.Release|Mixed Platforms.ActiveCfg = Release
-		{C3645AC5-A6E0-4308-AC99-6960102B8BC4}.Release|x86.ActiveCfg = Release
+		{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}.Debug|Any CPU.ActiveCfg = Debug
+		{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}.Debug|Any CPU.Build.0 = Debug
+		{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}.Debug|Mixed Platforms.Build.0 = Debug
+		{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}.Debug|x86.ActiveCfg = Debug
+		{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}.Debug|x86.Build.0 = Debug
+		{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}.Release|Any CPU.ActiveCfg = Release
+		{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}.Release|Any CPU.Build.0 = Release
+		{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}.Release|Mixed Platforms.ActiveCfg = Release
+		{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}.Release|Mixed Platforms.Build.0 = Release
+		{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}.Release|x86.ActiveCfg = Release
+		{F4211FC0-CAF3-43C7-A7E7-809D5347DF78}.Release|x86.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

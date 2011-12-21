@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace RulesWPF
 {
     [Serializable]
     public class Preferences
     {
-        private static Preferences instance;
+        private static Preferences _instance;
 
-        private static string filename = "Preferences.xml";
+        private static readonly string Filename =
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "HttpRules\\Preferences.xml");
 
         private Preferences() : this(false)
         {
-
         }
 
         private Preferences(bool loadDefaults)
@@ -31,30 +28,30 @@ namespace RulesWPF
 
         public static Preferences Current
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = Preferences.Load();
-                }
-
-                return instance;
-            }
+            get { return _instance ?? (_instance = Load()); }
         }
+
+        public int MaxLogLength { get; set; }
+
+        public bool Enabled { get; set; }
+
+        public bool EnableLogging { get; set; }
 
         public static Preferences Load()
         {
-            var serializer = new XmlSerializer(typeof(Preferences));
-            if (File.Exists(filename))
+            var serializer = new XmlSerializer(typeof (Preferences));
+            if (File.Exists(Filename))
             {
                 try
                 {
-                    using (var file = File.OpenRead(filename))
+                    using (var file = File.OpenRead(Filename))
                     {
-                        return (Preferences)serializer.Deserialize(file);
+                        return (Preferences) serializer.Deserialize(file);
                     }
                 }
-                catch { }
+                catch
+                {
+                }
             }
 
             return new Preferences(true);
@@ -62,20 +59,14 @@ namespace RulesWPF
 
         public static void Save()
         {
-            var serializer = new XmlSerializer(typeof(Preferences));
-            using (var file = File.OpenWrite(filename))
+            var serializer = new XmlSerializer(typeof (Preferences));
+            using (var file = File.OpenWrite(Filename))
             {
                 file.SetLength(0);
-                serializer.Serialize(file, instance);
+                serializer.Serialize(file, _instance);
                 file.Flush();
                 file.Close();
             }
         }
-        
-        public int MaxLogLength { get; set; }
-
-        public bool Enabled { get; set; }
-
-        public bool EnableLogging { get; set; }
     }
 }

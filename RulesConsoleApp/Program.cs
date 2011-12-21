@@ -7,22 +7,22 @@ namespace RulesConsoleApp
 {
     class Program
     {
-        private static HttpRulesCore.RuleEngine engine;
+        private static HttpRulesCore.RuleEngine _engine;
 
         static void Main(string[] args)
         {
             try
             {
-                Console.CancelKeyPress += new ConsoleCancelEventHandler(Console_CancelKeyPress);
+                Console.CancelKeyPress += Console_CancelKeyPress;
 
-                engine = new HttpRulesCore.RuleEngine();
-                engine.Start(@"L:\Dev\HttpRules\HttpRules\RulesWPF\Rules\Rules.xml");
+                _engine = new HttpRulesCore.RuleEngine();
+                _engine.Start(@"L:\Dev\HttpRules\HttpRules\RulesWPF\Rules\Rules.xml");
 
                 Console.ReadKey();
             }
             finally
             {
-                engine.Shutdown();
+                _engine.Shutdown();
             }
         }
 
@@ -34,7 +34,7 @@ namespace RulesConsoleApp
         static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
             Console.WriteLine("Shutting down...");
-            engine.Shutdown();
+            _engine.Shutdown();
         }
     }
 }

@@ -40,7 +40,7 @@ namespace RulesWPF
         /// <summary>
         /// The rule path.
         /// </summary>
-        private readonly string rulePath = @"L:\Dev\HttpRules\HttpRules\RulesWPF\Rules\Rules.xml";
+        private readonly string rulePath = @"HttpRules\Rules.xml";
 
         #endregion
 
@@ -76,9 +76,15 @@ namespace RulesWPF
             this.RuleCollection = new RuleCollection();
             this.lvRules.DataContext = this.RuleCollection;
 
-            if (Preferences.Current.Enabled)
+            try
             {
-                this.engine.Start(this.rulePath);
+                if (Preferences.Current.Enabled)
+                {
+                    this.engine.Start(this.rulePath);
+                }
+            }
+            catch
+            {
             }
 
             this.UpdateUIState();

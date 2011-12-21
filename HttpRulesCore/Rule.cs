@@ -125,7 +125,7 @@ namespace HttpRulesCore
         #region Public Methods
 
         /// <summary>
-        /// The parse.
+        /// Parse the rules xml document.
         /// </summary>
         /// <param name="fullPath">
         /// The full path.
@@ -137,7 +137,17 @@ namespace HttpRulesCore
         {
             var doc = XDocument.Load(fullPath);
 
-            return doc.Root != null ? doc.Root.Descendants("rule").Select(ruleXml => new Rule(ruleXml)).ToList() : Enumerable.Empty<Rule>();
+            return doc.Root != null ? doc.Root.Descendants("rule").Select(ruleXml =>
+            {
+                try
+                {
+                    return new Rule(ruleXml);
+                }
+                catch
+                {
+                    return null;
+                }
+            }).Where(r => r != null).ToList() : Enumerable.Empty<Rule>();
         }
 
         /// <summary>

@@ -7,12 +7,12 @@
   <!-- the trailing slash on the from here shouldn't matter since the homepage
   doesn't httpsify anyway -->
 
-  <rule from="^http://(www\.)?amazon\.com/" to="https://www.amazon.com/" />
+  <!--<rule from="^http://(www\.)?amazon\.com/" to="https://www.amazon.com/" />
 
   <rule from="^http://(www\.)?amazon\.co\.(uk|jp)/" 
           to="https://www.amazon.co.$2/" />  
 
   <rule from="^http://(www\.)?amazon\.(ca|cn|de|fr)/" 
-          to="https://www.amazon.$2/" />  
+          to="https://www.amazon.$2/" />-->  
 
 </ruleset>
