@@ -12,5 +12,7 @@ namespace RulesWPF.Models
         public string Url { get; set; }
 
         public string Message { get; set; }
+
+        public string Referer { get; set; }
     }
 }

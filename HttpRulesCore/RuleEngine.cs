@@ -214,7 +214,7 @@ namespace HttpRulesCore
             if (this.ResponseReceived != null)
             {
                 this.ResponseReceived(
-                    session, new ResponseSummaryEventArgs { ResponseCode = session.responseCode, FullUrl = session.fullUrl, ResponseCodeText = session.oResponse.headers.HTTPResponseStatus });
+                    session, new ResponseSummaryEventArgs { ResponseCode = session.responseCode, FullUrl = session.fullUrl, ResponseCodeText = session.oResponse.headers.HTTPResponseStatus, Referer = session.oRequest["Referer"] ?? "No Referer" });
             }
         }
 

@@ -42,6 +42,7 @@ namespace HttpRulesCore
             this.Session = session;
             this.Message = message;
             this.Path = session.host + session.PathAndQuery;
+            this.Referer = session.oRequest["Referer"] ?? "No Referer";
         }
 
         #endregion
@@ -67,6 +68,8 @@ namespace HttpRulesCore
         /// Gets or sets Session.
         /// </summary>
         public Session Session { get; set; }
+
+        public string Referer { get; set; }
 
         #endregion
     }

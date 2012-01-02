@@ -66,6 +66,25 @@ True
         <block />
     </actions>
   </rule>
+  <rule name="Google search AdWords click">
+    <match>||google.com/aclk</match>
+    <match>||google.co.uk/aclk</match>
+    <match>||google.com.au/aclk</match>
+    <actions>
+      <python>
+        <![CDATA[
+import clr
+clr.AddReference("HttpRulesCore")
+from System import Uri
+from HttpRulesCore import Extensions
+querystring = session.PathAndQuery
+url = Extensions.GetQueryValue(session, "adurl")
+Extensions.RedirectSession(session, url, False)
+False
+      ]]>
+      </python>
+    </actions>
+  </rule>
   <rule name="AdBlock (Easylist)">
     <actions>
       <adblock url="https://easylist-downloads.adblockplus.org/easylist_noelemhide.txt" />
@@ -118,9 +137,11 @@ True
   </rule>
   <rule name="Google search 204">
     <match>||google.com/generate_204</match>
-    <match>||google.co.uk/generate_204</match>
     <match>||google.com/gen_204</match>
+    <match>||google.co.uk/generate_204</match>
     <match>||google.co.uk/gen_204</match>
+    <match>||google.com.au/generate_204</match>
+    <match>||google.com.au/gen_204</match>
     <actions>
       <python>
         <![CDATA[
@@ -142,6 +163,7 @@ False
   <rule name="Google search result click">
     <match>||google.com/url</match>
     <match>||google.co.uk/url</match>
+    <match>||google.com.au/url</match>
     <actions>
       <python>
         <![CDATA[
@@ -149,12 +171,8 @@ import clr
 clr.AddReference("HttpRulesCore")
 from System import Uri
 from HttpRulesCore import Extensions
-querystring = session.PathAndQuery
-startindex = querystring.index("&url=")
-endindex = querystring.index("&ei", startindex)
-url = querystring[startindex + 5:endindex]
-# session.url = Uri.UnescapeDataString(url)[7:]
-Extensions.RedirectSession(session, Uri.UnescapeDataString(url), False)
+url = Extensions.GetQueryValue(session, "url")
+Extensions.RedirectSession(session, url, False)
 False
       ]]>
       </python>

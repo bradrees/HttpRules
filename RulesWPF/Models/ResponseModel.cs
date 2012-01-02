@@ -24,5 +24,7 @@ namespace RulesWPF.Models
                 responseCodeText = value;
             }
         }
+
+        public string Referer { get; set; }
     }
 }

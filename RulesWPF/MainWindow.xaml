@@ -65,8 +65,13 @@
                                             <Run Text="{Binding Message}" />  
                                             <TextBlock.ToolTip>
                                                 <ToolTip>
-                                                    <TextBlock>
-                                                        <Run Text="{Binding Url}" />
+                                                    <TextBlock TextWrapping="Wrap" MaxWidth="600">
+                                                       <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0} &#x0a;Referer: {1}">
+                                                            <Binding Path="Url"></Binding>
+                                                            <Binding Path="Referer"></Binding>
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
                                                     </TextBlock>                                            
                                                 </ToolTip> 
                                             </TextBlock.ToolTip>
@@ -117,9 +122,14 @@
                                                         <Run Text="{Binding FullUrl}" />  
                                                         <TextBlock.ToolTip>
                                                             <ToolTip>
-                                                                <TextBlock>
-                                                                    <Run Text="{Binding FullUrl}" />
-                                                                </TextBlock>                                            
+                                                                <TextBlock TextWrapping="Wrap" MaxWidth="600">
+                                                                    <TextBlock.Text>
+                                                                        <MultiBinding StringFormat="{}{0} &#x0a;Referer: {1}">
+                                                                            <Binding Path="FullUrl"></Binding>
+                                                                            <Binding Path="Referer"></Binding>
+                                                                         </MultiBinding>
+                                                                     </TextBlock.Text>
+                                                                </TextBlock> 
                                                             </ToolTip> 
                                                         </TextBlock.ToolTip>
                                                         <TextBlock.ContextMenu>

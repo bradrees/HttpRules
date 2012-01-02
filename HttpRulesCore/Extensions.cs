@@ -7,6 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace HttpRulesCore
@@ -344,6 +345,28 @@ namespace HttpRulesCore
             session.oResponse.headers.Add("Content-Length", "0");
         }
 
+        public static Dictionary<string, string> ExtractQueryParams(this Session session)
+        {
+            var queryStart = session.PathAndQuery.IndexOf('?');
+            if (queryStart == -1)
+            {
+                return new Dictionary<string, string>(0);
+            }
+
+            return session.PathAndQuery.Substring(queryStart).Split('&').Select(
+                q =>
+                q.Contains('=')
+                    ? new KeyValuePair<string, string>(new String(q.TakeWhile(c => !c.Equals('=')).ToArray()),
+                                                       Uri.UnescapeDataString(new String(q.SkipWhile(c => !c.Equals('=')).ToArray()).Substring(1)))
+                    : new KeyValuePair<string, string>(q, String.Empty)).ToDictionary(StringComparer.OrdinalIgnoreCase);
+        }
+
+        public static string GetQueryValue(this Session session, string queryKey)
+        {
+            var queryKeys = session.ExtractQueryParams();
+            return queryKey.Contains(queryKey) ? queryKeys[queryKey] : null;
+        }
+
         /// <summary>
         /// Returns a 204 No Content response to the client, which will usually silently stop the request and stop further processing by the browser (i.e. safe abort).
         /// </summary>
@@ -396,6 +419,13 @@ namespace HttpRulesCore
             {
                 yield return temp;
             }
+        }
+
+        public static string WildcardToRegex(this string pattern)
+        {
+            return Regex.Escape(pattern).
+                               Replace("\\*", ".*").
+                               Replace("\\?", ".");
         }
 
         #endregion

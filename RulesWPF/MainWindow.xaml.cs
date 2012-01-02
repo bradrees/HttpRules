@@ -244,7 +244,7 @@ namespace RulesWPF
         {
             if (Preferences.Current.EnableLogging)
             {
-                this.ResponseQueue.Enqueue(new ResponseModel { ResponseCode = e.ResponseCode, FullUrl = e.FullUrl, ResponseCodeText = e.ResponseCodeText });
+                this.ResponseQueue.Enqueue(new ResponseModel { ResponseCode = e.ResponseCode, FullUrl = e.FullUrl, ResponseCodeText = e.ResponseCodeText, Referer = e.Referer });
             }
         }
 
@@ -261,7 +261,7 @@ namespace RulesWPF
         {
             if (Preferences.Current.EnableLogging)
             {
-                this.LogQueue.Enqueue(new LogModel { RuleName = e.Rule.Name, Url = e.Path, Message = e.Message });
+                this.LogQueue.Enqueue(new LogModel { RuleName = e.Rule.Name, Url = e.Path, Message = e.Message, Referer = e.Referer });
             }
         }
 

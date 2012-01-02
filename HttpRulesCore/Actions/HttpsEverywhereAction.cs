@@ -45,38 +45,36 @@ namespace HttpRulesCore.Actions
                 this.DirectoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, this.DirectoryPath);
             }
 
-            if (!Directory.Exists(this.DirectoryPath))
+            this.DirectoryPath = Path.Combine(this.DirectoryPath, "default.rulesets");
+
+            if (!File.Exists(this.DirectoryPath))
             {
                 return false;
             }
 
-            this.Rulesets = new List<Ruleset>();
-            foreach (var file in Directory.EnumerateFiles(this.DirectoryPath, "*.xml"))
-            {
-                var contents = File.ReadAllText(file);
-                var rulesetObj = (from ruleset in XDocument.Parse(contents).Descendants("ruleset")
-                                  let matchRule = (string) ruleset.Attribute("match_rule")
-                                  select new Ruleset
-                                             {
-                                                 Name = (string) ruleset.Attribute("name"),
-                                                 MatchRule =
-                                                     String.IsNullOrWhiteSpace(matchRule) ? null : new Regex(matchRule),
-                                                 Exclusions = (from ex in ruleset.Descendants("exclusion")
-                                                               select new Regex((string) ex.Attribute("pattern"))).
-                                                     ToList(),
-                                                 Rule = (from r in ruleset.Descendants("rule")
-                                                         select new RulesetRule
-                                                                    {
-                                                                        From = new Regex((string) r.Attribute("from")),
-                                                                        To = (string) r.Attribute("to")
-                                                                    }).ToList()
-                                             }).FirstOrDefault();
-
-                if (rulesetObj != null)
-                {
-                    this.Rulesets.Add(rulesetObj);
-                }
-            }
+            this.Rulesets = (from ruleset in XDocument.Load(this.DirectoryPath).Descendants("ruleset")
+                             where ruleset.Attribute("default_off") == null
+                             let matchRule = (string) ruleset.Attribute("match_rule")
+                             select new Ruleset
+                                        {
+                                            Name = (string) ruleset.Attribute("name"),
+                                            MatchRule =
+                                                String.IsNullOrWhiteSpace(matchRule) ? null : new Regex(matchRule),
+                                            Exclusions = (from ex in ruleset.Descendants("exclusion")
+                                                          select new Regex((string) ex.Attribute("pattern"))).
+                                                ToList(),
+                                            Rule = (from r in ruleset.Descendants("rule")
+                                                    select new RulesetRule
+                                                               {
+                                                                   From = new Regex((string) r.Attribute("from")),
+                                                                   To = (string) r.Attribute("to")
+                                                               }).ToList(),
+                                            Targets = (from t in ruleset.Descendants("target")
+                                                       select
+                                                           new Regex((((string) t.Attribute("host"))).WildcardToRegex()))
+                                                .ToList()
+                                        }).ToList();
+            
 
             return true;
         }
@@ -107,6 +105,11 @@ namespace HttpRulesCore.Actions
                     }
 
                     if (ruleset.Exclusions.Any(ex => ex.IsMatch(session.fullUrl)))
+                    {
+                        continue;
+                    }
+
+                    if (ruleset.Targets.Any() && !ruleset.Targets.Any(t => t.IsMatch(session.fullUrl)))
                     {
                         continue;
                     }
@@ -151,6 +154,7 @@ namespace HttpRulesCore.Actions
             public string Name { get; set; }
             public Regex MatchRule { get; set; }
             public IEnumerable<Regex> Exclusions { get; set; }
+            public IEnumerable<Regex> Targets { get; set; }
             public IEnumerable<RulesetRule> Rule { get; set; }
         }
 

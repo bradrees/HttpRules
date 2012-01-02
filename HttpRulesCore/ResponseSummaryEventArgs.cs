@@ -37,6 +37,12 @@ namespace HttpRulesCore
         /// </summary>
         public string ResponseCodeText { get; set; }
 
+        /// <summary>
+        /// Gets or sets the referer.
+        /// </summary>
+        /// <value>The referer.</value>
+        public string Referer { get; set; }
+
         #endregion
     }
 }
