@@ -94,6 +94,7 @@ namespace HttpRulesCore.Actions
 
             if (!session.isHTTPS && session.port != 443)
             {
+                var host = new Uri(session.fullUrl).Host;
                 foreach (var ruleset in Rulesets)
                 {
                     if (ruleset.MatchRule != null)
@@ -109,7 +110,7 @@ namespace HttpRulesCore.Actions
                         continue;
                     }
 
-                    if (ruleset.Targets.Any() && !ruleset.Targets.Any(t => t.IsMatch(session.fullUrl)))
+                    if (ruleset.Targets.Any() && !ruleset.Targets.Any(t => t.IsMatch(host)))
                     {
                         continue;
                     }

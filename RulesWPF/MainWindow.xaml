@@ -6,19 +6,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         mc:Ignorable="d" 
         
-        Title="Filterama" WindowStyle="None" ResizeMode="NoResize" 
+        Title="HttpRules" WindowStyle="None" ResizeMode="NoResize" 
         OverridesDefaultStyle="False" Visibility="Collapsed" 
-        Height="235" Width="400" HorizontalAlignment="Left" VerticalAlignment="Top" 
+        Height="265" Width="400" HorizontalAlignment="Left" VerticalAlignment="Top" 
         Left="0" Top="0" 
-        ShowInTaskbar="False" Icon="/RulesWPF;component/Icons/Earth.ico" BorderThickness="1">
+        ShowInTaskbar="False" Icon="/RulesWPF;component/Icons/Earth.ico" BorderThickness="1" SnapsToDevicePixels="True" UseLayoutRounding="True">
     <Window.CommandBindings>
         <CommandBinding
         Command="ApplicationCommands.Copy"
         Executed="CopyCommandHandler"
         CanExecute="CanCopyExecuteHandler" />
     </Window.CommandBindings>
-    <Grid Margin="0,0,0,0" SnapsToDevicePixels="True" Height="237" Width="404">        
-        
+    
+    <Grid Margin="0,0,0,0" SnapsToDevicePixels="True" Height="267" Width="404">
+        <Image Height="24" HorizontalAlignment="Left" Margin="0,3,0,0" Name="imgLogo" Stretch="None" VerticalAlignment="Top" Width="113" Source="/RulesWPF;component/HttpRules_Logo_24.png" />
+
         <tb:TaskbarIcon Name="tb" ToolTipText="Show/Hide" IconSource="Icons/Earth.ico" >
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
@@ -33,16 +35,10 @@
                 </ContextMenu>
                 </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
-        <TabControl HorizontalAlignment="Stretch" Margin="-3,-3,0,0" Padding="0,0,0,0" Name="tabControl" VerticalAlignment="Stretch" TabStripPlacement="Bottom" UseLayoutRounding="True">
+        <TabControl HorizontalAlignment="Stretch" Margin="-3,27,0,0" Padding="0,0,0,0" Name="tabControl" VerticalAlignment="Stretch" TabStripPlacement="Bottom" UseLayoutRounding="True">
             <TabItem Header="Log" Name="tabLog" Width="134" Height="30" FontWeight="SemiBold">
                 <Grid>
-                    <Canvas HorizontalAlignment="Stretch" Margin="0,0,0,0" Name="canvasLog" VerticalAlignment="Stretch" >
-                        <Canvas.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="White" Offset="1" />
-                                <GradientStop Color="#FFEBF0FF" Offset="0" />
-                            </LinearGradientBrush>
-                        </Canvas.Background>
+                    <Canvas HorizontalAlignment="Stretch" Margin="0,0,0,0" Name="canvasLog" VerticalAlignment="Stretch" >                        
                         <Canvas Name="pnlLog" Width="{Binding ElementName=canvas, Path=ActualWidth}" Height="{Binding ElementName=canvas, Path=ActualHeight}" >
                             <ListView Margin="5" Height="198" Name="lvLog" Width="392" ItemsSource="{Binding}" FontWeight="Regular">
                                 <ListView.View>
