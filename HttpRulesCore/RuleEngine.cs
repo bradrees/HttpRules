@@ -34,6 +34,8 @@ namespace HttpRulesCore
         /// </summary>
         private string _path;
 
+        private int _sessionCount;
+
         #endregion
 
         #region Constructors and Destructors
@@ -45,6 +47,7 @@ namespace HttpRulesCore
         {
             FiddlerApplication.BeforeRequest += this.FiddlerApplicationBeforeRequest;
             FiddlerApplication.BeforeResponse += this.FiddlerApplicationBeforeResponse;
+            FiddlerApplication.AfterSessionComplete += FiddlerApplicationAfterSessionComplete;
         }
 
         #endregion
@@ -79,6 +82,17 @@ namespace HttpRulesCore
         /// Gets or sets the rules.
         /// </summary>
         public IEnumerable<Rule> Rules { get; set; }
+
+        /// <summary>
+        /// Gets the number of sessions that are currently active.
+        /// </summary>
+        public int SessionCount
+        {
+            get
+            {
+                return this._sessionCount;
+            }
+        }
 
         #endregion
 
@@ -180,6 +194,8 @@ namespace HttpRulesCore
         /// </param>
         private void FiddlerApplicationBeforeRequest(Session session)
         {
+            Interlocked.Increment(ref this._sessionCount);
+
             var requestProperties = new RequestProperties(session.fullUrl, session.oRequest.headers["Referer"], session.oRequest.headers["Accept"]);
 
             if (requestProperties.Uri == null)
@@ -214,8 +230,17 @@ namespace HttpRulesCore
             if (this.ResponseReceived != null)
             {
                 this.ResponseReceived(
-                    session, new ResponseSummaryEventArgs { ResponseCode = session.responseCode, FullUrl = session.fullUrl, ResponseCodeText = session.oResponse.headers.HTTPResponseStatus, Referer = session.oRequest["Referer"] ?? "No Referer" });
+                    session, new ResponseSummaryEventArgs { ResponseCode = session.responseCode, FullUrl = session.fullUrl, ResponseCodeText = session.oResponse.headers.HTTPResponseStatus, Referer = (session.oRequest["Referer"].HasValue() ? session.oRequest["Referer"] : "None") + ", Sessions: " + this.SessionCount });
             }
+        }
+
+        /// <summary>
+        /// The handler for when a session completes.
+        /// </summary>
+        /// <param name="oSession">The session parameter.</param>
+        void FiddlerApplicationAfterSessionComplete(Session oSession)
+        {
+            Interlocked.Decrement(ref this._sessionCount);
         }
 
         #endregion
