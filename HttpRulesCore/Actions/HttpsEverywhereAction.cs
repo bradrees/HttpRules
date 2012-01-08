@@ -21,6 +21,10 @@ namespace HttpRulesCore.Actions
 
         private IList<Ruleset> Rulesets { get; set; }
 
+        private static readonly IList<Tuple<string, string, DateTime>> RedirectCounter = new List<Tuple<string, string, DateTime>>();
+
+        private static readonly object RedirectLocker = new object();
+
         #region IRequestAction Members
 
         public override string NodeName
@@ -124,14 +128,36 @@ namespace HttpRulesCore.Actions
 
                         var secureUrl = rulesetRule.From.Replace(session.fullUrl, rulesetRule.To);
 
-                        if (this.FakeHttps)
+                        // So here we are checking for a redirect loop, if we get 10 redirects in a row in 30 seconds then we need to drop back to HTTP.
+                        lock (RedirectLocker)
+                        {
+                            if (RedirectCounter.Any() && RedirectCounter.Last().Item1 == session.fullUrl)
+                            {
+                                if (RedirectCounter.Count > 5 && (RedirectCounter.Max(t => t.Item3) - RedirectCounter.Min(t => t.Item3)).TotalSeconds < 30)
+                                {
+                                    RuleLog.Current.AddRule(
+                                        rule,
+                                        session,
+                                        String.Format("HttpsEverywhere (Failed): {0} ({1})", ruleset.Name, session.hostname));
+
+                                    return true;
+                                }
+                            }
+                            else
+                            {
+                                RedirectCounter.Clear();
+                            }
+
+                            RedirectCounter.Add(Tuple.Create(session.fullUrl, secureUrl, DateTime.UtcNow));
+                        }
+
+
+                        if (this.FakeHttps) // BUG: This doesn't really work at the moment.
                         {
                             return !session.OverrideRequest(secureUrl);
                         }
-                        else
-                        {
-                            session.RedirectSession(secureUrl, false);
-                        }
+
+                        session.RedirectSession(secureUrl, false);
 
                         RuleLog.Current.AddRule(
                             rule,
