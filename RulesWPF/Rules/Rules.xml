@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <rules>
-  <!-- White lists -->
-  <rule name="Whitelist" enabled="false">
-    <match>||blinkbox.com^$thirdparty</match>
+  <rule name="Whitelist" enabled="false" logEnabled="true">
+    <matches>
+      <match>||blinkbox.com^$thirdparty</match>
+    </matches>
     <actions>
       <request>
         <break />
@@ -12,17 +13,20 @@
       </response>
     </actions>
   </rule>
-  <!-- Black lists -->
-  <rule name="Python Example Block">
-    <match>||www.example.com</match>
+  <rule name="Python Example Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||www.example.com</match>
+    </matches>
     <actions>
       <python>
-session.oRequest.FailSession(403, "Forbidden By Proxy", "Request blocked due to the rule: " + rule.Name)
-True
+        <![CDATA[
+        session.oRequest.FailSession(403, "Forbidden By Proxy", "Request blocked due to the rule: " + rule.Name)
+        True
+      ]]>
       </python>
     </actions>
   </rule>
-  <rule name="Facebook 'like' Block">
+  <rule name="Facebook 'like' Block" enabled="true" logEnabled="true">
     <matches>
       <match>||facebook.com/plugins/like.php</match>
       <match>||facebook.com/plugins/recommendations.php</match>
@@ -31,18 +35,110 @@ True
       <match>||connect.facebook.net/en_US/all.js</match>
       <match>||facebook.com/extern/login_status.php</match>
       <match>||facebook.com/widget/</match>
+      <match>||facebook.com/plugins/fan.php</match>
+      <match>||fbcdn.net/connect.php</match>
+      <match>||connect.facebook.com/js/api_lib</match>
     </matches>
     <actions>
       <block />
     </actions>
   </rule>
-  <rule name="Google Analytics Block">
-    <match>||google-analytics.com</match>
+  <rule name="Sharethis Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||sharethis.com</match>
+    </matches>
     <actions>
       <block />
     </actions>
   </rule>
-  <rule name="DoubleClick Block">
+  <rule name="Twitter widget Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||widgets.twimg.com</match>
+      <match>||twitter.com/js/tfw/widget/hubclient.js</match>
+      <match>||twitter.com/1/urls/count.json</match>
+      <match>||twitter.com/widgets</match>
+      <match>||twitter.com/1/users/show.json</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Tweet and Track Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||bit.ly/TweetAndTrack.js</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Tweetmeme Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||tweetmeme.com/i/scripts</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Bit.ly API Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||bit.ly/javascript-api.js</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Stumble Upon Badge Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||stumble-upon.com/js/badge_su.js</match>
+      <match>||stumbleupon.com/badge/embed</match>
+      <match>||stumbleupon.com/*badge</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Google Plus Badge Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||plusone.google.com</match>
+      <match>||apis.google.com/js/plusone.js</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Gigya Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||gigya.com/js</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Outbrain Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||widgets.outbrain.com</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Linked In Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||platform.linkedin.com</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Google Analytics Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||google-analytics.com</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="DoubleClick Block" enabled="true" logEnabled="true">
     <matches>
       <match>||doubleclick.net</match>
     </matches>
@@ -50,26 +146,28 @@ True
       <block />
     </actions>
   </rule>
-  <rule name="Scorecard Research Block">
+  <rule name="Scorecard Research Block" enabled="true" logEnabled="true">
     <matches>
-        <match>||scorecardresearch.com</match>
+      <match>||scorecardresearch.com</match>
     </matches>
     <actions>
-        <block />
+      <block />
     </actions>
   </rule>
-  <rule name="MSN Messenger Ads Block">
+  <rule name="MSN Messenger Ads Block" enabled="true" logEnabled="true">
     <matches>
-        <match>||catalog.video.msn.com</match>
+      <match>||catalog.video.msn.com</match>
     </matches>
     <actions>
-        <block />
+      <block />
     </actions>
   </rule>
-  <rule name="Google search AdWords click">
-    <match>||google.com/aclk</match>
-    <match>||google.co.uk/aclk</match>
-    <match>||google.com.au/aclk</match>
+  <rule name="Google search AdWords click" enabled="true" logEnabled="true">
+    <matches>
+      <match>||google.com/aclk</match>
+      <match>||google.co.uk/aclk</match>
+      <match>||google.com.au/aclk</match>
+    </matches>
     <actions>
       <python>
         <![CDATA[
@@ -85,40 +183,41 @@ False
       </python>
     </actions>
   </rule>
-  <rule name="AdBlock (Easylist)">
+  <rule name="AdBlock (Easylist)" enabled="true" logEnabled="true">
     <actions>
       <adblock url="https://easylist-downloads.adblockplus.org/easylist_noelemhide.txt" />
     </actions>
   </rule>
-  <rule name="AdBlock Tracking (Easylist)">
+  <rule name="AdBlock Tracking (Easylist)" enabled="true" logEnabled="true">
     <actions>
       <adblock url="https://easylist-downloads.adblockplus.org/easyprivacy.txt" />
     </actions>
   </rule>
-  <rule name="AdBlock Tracking (Fanboy)" enabled="false">
+  <rule name="AdBlock Tracking (Fanboy)" enabled="false" logEnabled="true">
     <actions>
-      <adblock url="https://secure.fanboy.co.nz/fanboy-tracking.txt" />            
-    </actions>        
+      <adblock url="https://secure.fanboy.co.nz/fanboy-tracking.txt" />
+    </actions>
   </rule>
-  <rule name="Age Filter" enabled="true">
-    <match>||bradleyrees.com</match>
+  <rule name="Age Filter" enabled="true" logEnabled="true">
+    <matches>
+      <match>||bradleyrees.com</match>
+    </matches>
     <actions>
       <request>
-        <ageFilter dateOfBirth="1/1/1998" countryCode="GB" />
+        <ageFilter countryCode="GB" dateOfBirth="1998-01-01T00:00:00" />
       </request>
       <response>
-        <ageFilter dateOfBirth="1/1/1998" countryCode="GB" />
+        <ageFilter countryCode="GB" dateOfBirth="1998-01-01T00:00:00" />
       </response>
     </actions>
   </rule>
-  <!-- Privacy modifiers -->
-  <rule name="Google Search (no cookies)">
+  <rule name="Google Search (no cookies)" enabled="true" logEnabled="true">
     <matches>
       <match>/google\.co[m]?\.?(uk|au)?/(search|csi|maps|product|images|videosearch|$)/</match>
     </matches>
     <actions>
       <header name="Accept-Encoding">
-        <removeValue type="delimited" delimiter=",">sdch</removeValue>
+        <removeValue type="Delimited" delimiter=",">sdch</removeValue>
       </header>
       <cookie name="PREF">
         <remove />
@@ -133,15 +232,17 @@ False
         <remove />
       </cookie>
       <break />
-    </actions>   
+    </actions>
   </rule>
-  <rule name="Google search 204">
-    <match>||google.com/generate_204</match>
-    <match>||google.com/gen_204</match>
-    <match>||google.co.uk/generate_204</match>
-    <match>||google.co.uk/gen_204</match>
-    <match>||google.com.au/generate_204</match>
-    <match>||google.com.au/gen_204</match>
+  <rule name="Google search 204" enabled="true" logEnabled="true">
+    <matches>
+      <match>||google.com/generate_204</match>
+      <match>||google.com/gen_204</match>
+      <match>||google.co.uk/generate_204</match>
+      <match>||google.co.uk/gen_204</match>
+      <match>||google.com.au/generate_204</match>
+      <match>||google.com.au/gen_204</match>
+    </matches>
     <actions>
       <python>
         <![CDATA[
@@ -154,16 +255,17 @@ False
       </python>
     </actions>
   </rule>
-  <!-- Redirects -->
-  <rule name="HttpsEverywhere">
+  <rule name="HttpsEverywhere" enabled="true" logEnabled="true">
     <actions>
       <httpseverywhere path="Rules\HttpsEverywhere" fakeHttps="false" />
     </actions>
   </rule>
-  <rule name="Google search result click">
-    <match>||google.com/url</match>
-    <match>||google.co.uk/url</match>
-    <match>||google.com.au/url</match>
+  <rule name="Google search result click" enabled="true" logEnabled="true">
+    <matches>
+      <match>||google.com/url</match>
+      <match>||google.co.uk/url</match>
+      <match>||google.com.au/url</match>
+    </matches>
     <actions>
       <python>
         <![CDATA[
@@ -178,47 +280,16 @@ False
       </python>
     </actions>
   </rule>
-  <!-- Request modifiers -->
-  <rule name="Referer Header Block" logEnabled="false">
+  <rule name="Referer Header Block" enabled="true" logEnabled="false">
     <actions>
       <header name="Referer">
         <remove />
       </header>
     </actions>
   </rule>
-  <!--<rule name="facebook Auto login">
-    <match>||facebook.com</match>
+  <rule name="Save Video Files" enabled="true" logEnabled="true">
     <actions>
-      <respond path="/login.php" method="post" url="https://login.facebook.com/login.php?login_attempts=1">
-        <value key="email">#{Email}</value>
-        <value key="pass">#{Password}</value>
-      </respond>
-      <cookie name="lxe">
-        <keep timeout="3600" path="/login.php" />
-      </cookie>
-      <cookie name="c_user">
-        <keep timeout="3600" path="/login.php" />
-      </cookie>
-      <cookie name="datr">
-        <keep timeout="3600" path="/login.php" />
-      </cookie>
-      <cookie name="lo">
-        <keep timeout="3600" path="/login.php" />
-      </cookie>
-      <cookie name="sct">
-        <keep timeout="3600" path="/login.php" />
-      </cookie>
-      <cookie name="presence">
-        <keep timeout="3600" path="/login.php" />
-      </cookie>
-      <cookie name="lsd">
-        <keep timeout="3600" path="/login.php" />
-      </cookie>
-    </actions>
-  </rule>-->
-  <rule name="Save Video Files">
-    <actions>
-      <saveFile extensions="mpg,mp4,flv"></saveFile>
+      <saveFile extensions="mpg,mp4,flv" />
     </actions>
   </rule>
 </rules>

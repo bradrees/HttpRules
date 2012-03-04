@@ -120,6 +120,12 @@ namespace HttpRulesCore
         /// </summary>
         public XElement RuleSource { get; set; }
 
+        /// <summary>
+        /// Gets or sets the response log.
+        /// </summary>
+        /// <value>The response log.</value>
+        public EventHandler<ResponseSummaryEventArgs> ResponseLog { get; set; }
+
         #endregion
 
         #region Public Methods

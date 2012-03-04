@@ -156,7 +156,7 @@ namespace HttpRulesCore.Actions
                         {
                             return !session.OverrideRequest(secureUrl);
                         }
-
+                        rule.ResponseLog.FireEvent(session, new ResponseSummaryEventArgs { FullUrl = session.fullUrl, Referer = (session.oRequest["Referer"].HasValue() ? session.oRequest["Referer"] : "None"), ResponseCode = 302, ResponseCodeText = "302 Moved to SSL Connection" });
                         session.RedirectSession(secureUrl, false);
 
                         RuleLog.Current.AddRule(

@@ -7,6 +7,10 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Timers;
+using System.Windows.Threading;
+
 namespace RulesWPF
 {
     #region Using Directives
@@ -41,6 +45,8 @@ namespace RulesWPF
         /// The rule path.
         /// </summary>
         private readonly string rulePath = @"HttpRules\Rules.xml";
+
+        private readonly DispatcherTimer _iconUpdate = new DispatcherTimer(DispatcherPriority.Background);
 
         #endregion
 
@@ -87,7 +93,10 @@ namespace RulesWPF
             {
             }
 
-            this.UpdateUIState();
+            this._iconUpdate.Tick += UpdateUiState;
+            this._iconUpdate.Interval = TimeSpan.FromMilliseconds(250);
+            this._iconUpdate.IsEnabled = true;
+            this._iconUpdate.Start();
         }
 
         #endregion
@@ -348,26 +357,54 @@ namespace RulesWPF
             {
                 this.engine.Shutdown();
             }
-
-            this.UpdateUIState();
         }
 
         /// <summary>
         /// Updates the state of the UI.
         /// </summary>
-        private void UpdateUIState()
+        private void UpdateUiState(object sender, EventArgs eventArgs)
         {
             if (Preferences.Current.Enabled)
             {
-                this.cmToggle.Header = "Disable";
-                var iconStream = Application.GetResourceStream(new Uri("pack://application:,,,/RulesWPF;component/Icons/Earth Security.ico")).Stream;
-                this.tb.Icon = new Icon(iconStream);
+                if (this.engine.SessionCount == 0)
+                {
+                    this.cmToggle.Header = "Disable";
+                    this.tb.Icon = GetIcon("pack://application:,,,/RulesWPF;component/Icons/Earth Security.ico");
+                }
+                else
+                {
+                    this.cmToggle.Header = "Disable";
+                    this.tb.Icon = GetIcon("pack://application:,,,/RulesWPF;component/Icons/Earth Download.ico");
+                }
             }
             else
             {
                 this.cmToggle.Header = "Enable";
-                var iconStream = Application.GetResourceStream(new Uri("pack://application:,,,/RulesWPF;component/Icons/Earth Stop.ico")).Stream;
-                this.tb.Icon = new Icon(iconStream);
+                this.tb.Icon = GetIcon("pack://application:,,,/RulesWPF;component/Icons/Earth Stop.ico");
+            }
+        }
+
+        private readonly Dictionary<string, Icon> _icons = new Dictionary<string, Icon>();
+        private readonly object _iconsLocker = new object();
+
+        private Icon GetIcon(string path)
+        {
+            lock (_iconsLocker)
+            {
+                if (!this._icons.ContainsKey(path))
+                {
+                    var resourceStream = Application.GetResourceStream(new Uri(path));
+                    if (resourceStream != null)
+                    {
+                        this._icons[path] = new Icon(resourceStream.Stream);
+                    }
+                    else
+                    {
+                        this._icons[path] = null;
+                    }
+                }
+
+                return this._icons[path];
             }
         }
 
