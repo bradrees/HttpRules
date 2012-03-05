@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Timers;
 using System.Windows.Threading;
 
@@ -47,6 +48,18 @@ namespace RulesWPF
         private readonly string rulePath = @"HttpRules\Rules.xml";
 
         private readonly DispatcherTimer _iconUpdate = new DispatcherTimer(DispatcherPriority.Background);
+
+        private readonly DispatcherTimer _chartUpdate = new DispatcherTimer(DispatcherPriority.Background);
+
+        private readonly ObservableCollection<RequestChartPoint> _data = new ObservableCollection<RequestChartPoint>();
+        
+        private readonly Dictionary<string, Icon> _icons = new Dictionary<string, Icon>();
+
+        private readonly object _iconsLocker = new object();
+
+        private int _sessionCount;
+
+        private int _maxSessionCount;
 
         #endregion
 
@@ -97,6 +110,16 @@ namespace RulesWPF
             this._iconUpdate.Interval = TimeSpan.FromMilliseconds(250);
             this._iconUpdate.IsEnabled = true;
             this._iconUpdate.Start();
+
+            this._chartUpdate.Tick += UpdateChart;
+            this._chartUpdate.Interval = TimeSpan.FromMilliseconds(1000);
+            this._chartUpdate.IsEnabled = true;
+            this._chartUpdate.Start();
+
+            Enumerable.Range(0, 300).Select(r => new RequestChartPoint(0, 0) { Date = DateTime.Now.AddSeconds(-300+r) }).ForEach(this.ChartData.Add);
+
+            this.HeaderChart.DataContext = this.ChartData;
+            this.pnlChart.DataContext = this.ChartData;
         }
 
         #endregion
@@ -117,6 +140,11 @@ namespace RulesWPF
         /// Gets or sets the rule collection.
         /// </summary>
         protected RuleCollection RuleCollection { get; set; }
+
+        public ObservableCollection<RequestChartPoint> ChartData
+        {
+            get { return _data; }
+        }
 
         #endregion
 
@@ -254,6 +282,8 @@ namespace RulesWPF
             if (Preferences.Current.EnableLogging)
             {
                 this.ResponseQueue.Enqueue(new ResponseModel { ResponseCode = e.ResponseCode, FullUrl = e.FullUrl, ResponseCodeText = e.ResponseCodeText, Referer = e.Referer });
+                this._sessionCount++;
+                this._maxSessionCount = Math.Max(this._maxSessionCount, this.engine.SessionCount);
             }
         }
 
@@ -366,16 +396,8 @@ namespace RulesWPF
         {
             if (Preferences.Current.Enabled)
             {
-                if (this.engine.SessionCount == 0)
-                {
-                    this.cmToggle.Header = "Disable";
-                    this.tb.Icon = GetIcon("pack://application:,,,/RulesWPF;component/Icons/Earth Security.ico");
-                }
-                else
-                {
-                    this.cmToggle.Header = "Disable";
-                    this.tb.Icon = GetIcon("pack://application:,,,/RulesWPF;component/Icons/Earth Download.ico");
-                }
+                this.cmToggle.Header = "Disable";
+                this.tb.Icon = GetIcon(this.engine.SessionCount == 0 ? "pack://application:,,,/RulesWPF;component/Icons/Earth Security.ico" : "pack://application:,,,/RulesWPF;component/Icons/Earth Download.ico");
             }
             else
             {
@@ -383,9 +405,6 @@ namespace RulesWPF
                 this.tb.Icon = GetIcon("pack://application:,,,/RulesWPF;component/Icons/Earth Stop.ico");
             }
         }
-
-        private readonly Dictionary<string, Icon> _icons = new Dictionary<string, Icon>();
-        private readonly object _iconsLocker = new object();
 
         private Icon GetIcon(string path)
         {
@@ -467,5 +486,17 @@ namespace RulesWPF
         }
 
         #endregion
+
+        private void UpdateChart(object sender, EventArgs e)
+        {
+            if (this._data.Count > 300)
+            {
+                this._data.RemoveAt(0);
+            }
+
+            this._data.Add(new RequestChartPoint(_sessionCount, Math.Max(this._maxSessionCount, this.engine.SessionCount)));
+            _sessionCount = 0;
+            _maxSessionCount = 0;
+        }
     }
 }

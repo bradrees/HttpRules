@@ -38,6 +38,7 @@
       <match>||facebook.com/plugins/fan.php</match>
       <match>||fbcdn.net/connect.php</match>
       <match>||connect.facebook.com/js/api_lib</match>
+      <match>||facebook.com/widgets/</match>
     </matches>
     <actions>
       <block />
@@ -125,6 +126,14 @@
   <rule name="Linked In Block" enabled="true" logEnabled="true">
     <matches>
       <match>||platform.linkedin.com</match>
+    </matches>
+    <actions>
+      <block />
+    </actions>
+  </rule>
+  <rule name="Livefyre Block" enabled="true" logEnabled="true">
+    <matches>
+      <match>||livefyre.com</match>
     </matches>
     <actions>
       <block />
