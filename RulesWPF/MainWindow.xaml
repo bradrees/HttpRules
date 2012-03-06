@@ -4,6 +4,8 @@
         xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:charting="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:chartingprimitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         mc:Ignorable="d" 
         
         Title="HttpRules" WindowStyle="None" ResizeMode="NoResize" 
@@ -17,10 +19,62 @@
         Executed="CopyCommandHandler"
         CanExecute="CanCopyExecuteHandler" />
     </Window.CommandBindings>
-    
+    <Window.Resources>
+        <Style x:Key="InvisibleDataPoint" TargetType="{x:Type charting:DataPoint}">
+            <Setter Property="Background" Value="Red"/>
+            <Setter Property="Template" Value="{x:Null}"/>
+        </Style>
+        <Style x:Key="InvisibleDataPointAlt" TargetType="{x:Type charting:DataPoint}">
+            <Setter Property="Background" Value="Blue"/>
+            <Setter Property="Template" Value="{x:Null}"/>
+        </Style>
+    </Window.Resources>
     <Grid Margin="0,0,0,0" SnapsToDevicePixels="True" Height="267" Width="404">
+        <Grid.Resources>
+            <ControlTemplate
+                x:Key="ChartTemplate"
+                TargetType="charting:Chart">
+                <Border
+                    BorderBrush="White"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    Background="White"
+                    Padding="0">
+                    <chartingprimitives:EdgePanel
+                        x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}">
+                    </chartingprimitives:EdgePanel>
+                </Border>
+            </ControlTemplate>
+        </Grid.Resources>
         <Image Height="24" HorizontalAlignment="Left" Margin="0,3,0,0" Name="imgLogo" Stretch="None" VerticalAlignment="Top" Width="113" Source="/RulesWPF;component/HttpRules_Logo_24.png" />
-
+        <charting:Chart Template="{StaticResource ChartTemplate}" Width="560" Height="75" HorizontalAlignment="Right" VerticalAlignment="Top" Name="HeaderChart" BorderThickness="0" Margin="0,1,-280,0" Padding="0,0,0,0" Panel.ZIndex="0" ClipToBounds="False">
+            
+            <charting:Chart.LegendStyle>
+                <Style TargetType="Control">
+                    <Setter Property="Width" Value="0" />
+                    <Setter Property="Height" Value="0" />
+                </Style>
+            </charting:Chart.LegendStyle>
+            <charting:Chart.RenderTransform>
+                <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+            </charting:Chart.RenderTransform>
+            <charting:Chart.Axes>
+                <charting:CategoryAxis Visibility="Collapsed"></charting:CategoryAxis>
+                <charting:DateTimeAxis Visibility="Collapsed"></charting:DateTimeAxis>
+                <charting:LinearAxis Visibility="Hidden"></charting:LinearAxis>
+            </charting:Chart.Axes>
+            <charting:AreaSeries
+                    ItemsSource="{Binding}"
+                    IndependentValuePath="Date"
+                    DependentValuePath="Value" 
+                    DataPointStyle="{StaticResource InvisibleDataPoint}">
+            </charting:AreaSeries>
+          <charting:AreaSeries 
+                    ItemsSource="{Binding}"
+                    IndependentValueBinding="{Binding Date}"
+                    DependentValueBinding="{Binding MaxConcurrent}" 
+                    DataPointStyle="{StaticResource InvisibleDataPointAlt}">
+            </charting:AreaSeries>
+        </charting:Chart>
         <tb:TaskbarIcon Name="tb" ToolTipText="Show/Hide" IconSource="Icons/Earth.ico" >
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
@@ -36,7 +90,7 @@
                 </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
         <TabControl HorizontalAlignment="Stretch" Margin="-3,27,0,0" Padding="0,0,0,0" Name="tabControl" VerticalAlignment="Stretch" TabStripPlacement="Bottom" UseLayoutRounding="True">
-            <TabItem Header="Log" Name="tabLog" Width="134" Height="30" FontWeight="SemiBold">
+            <TabItem Header="Log" Name="tabLog" Width="100" Height="30" FontWeight="SemiBold">
                 <Grid>
                     <Canvas HorizontalAlignment="Stretch" Margin="0,0,0,0" Name="canvasLog" VerticalAlignment="Stretch" >                        
                         <Canvas Name="pnlLog" Width="{Binding ElementName=canvas, Path=ActualWidth}" Height="{Binding ElementName=canvas, Path=ActualHeight}" >
@@ -82,7 +136,7 @@
                     </Canvas>
                 </Grid>
             </TabItem>
-            <TabItem Header="Traffic" Name="tabTraffic" Width="133" Height="30" FontWeight="SemiBold">
+            <TabItem Header="Traffic" Name="tabTraffic" Width="100" Height="30" FontWeight="SemiBold">
                 <Grid>
                     <Canvas HorizontalAlignment="Stretch" Margin="0,0,0,0" Name="canvasTraffic" VerticalAlignment="Stretch" >
                         <Canvas.Background>
@@ -144,7 +198,7 @@
                     </Canvas>
                 </Grid>
             </TabItem>
-            <TabItem Header="Rules" Name="tabRules" Width="134" Height="30" FontWeight="SemiBold">
+            <TabItem Header="Rules" Name="tabRules" Width="100" Height="30" FontWeight="SemiBold">
                 <Grid>
                     <Canvas HorizontalAlignment="Stretch" Margin="0,0,0,0" Name="canvasRules" VerticalAlignment="Stretch" >
                         <Canvas.Background>
@@ -211,7 +265,31 @@
                         </Canvas>
                     </Canvas>
                 </Grid>
-            </TabItem>            
+            </TabItem>
+            <TabItem Header="Connections" Name="tabChart" Width="100" Height="30" FontWeight="SemiBold">
+                <Grid>
+                    <charting:Chart Name="pnlChart" BorderThickness="0" Margin="0" Padding="10,0,0,0">
+                        <charting:Chart.Axes>
+                            <charting:CategoryAxis Visibility="Collapsed"></charting:CategoryAxis>
+                            <charting:DateTimeAxis Visibility="Collapsed"></charting:DateTimeAxis>
+                            <charting:LinearAxis Visibility="Hidden"></charting:LinearAxis>
+                        </charting:Chart.Axes>
+                        <charting:AreaSeries Title="Requests/Sec"
+                                ItemsSource="{Binding}"
+                                IndependentValuePath="Date"
+                                DependentValuePath="Value" 
+                                DataPointStyle="{StaticResource InvisibleDataPoint}">
+                        </charting:AreaSeries>
+                            <charting:AreaSeries Title="Pending"
+                                ItemsSource="{Binding}"
+                                IndependentValueBinding="{Binding Date}"
+                                DependentValueBinding="{Binding MaxConcurrent}" 
+                                     
+                                DataPointStyle="{StaticResource InvisibleDataPointAlt}">
+                        </charting:AreaSeries>
+                    </charting:Chart>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

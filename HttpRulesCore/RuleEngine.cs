@@ -147,6 +147,7 @@ namespace HttpRulesCore
         {
             this._path = path;
             this.Rules = Rule.Parse(this._path).ToList();
+            this.Rules.ForEach(r => r.ResponseLog = this.ResponseReceived);
 
             this.RequestRules = (from r in this.Rules where r.RequestActions.Any() select r).ToList();
             this.ResponseRules = (from r in this.Rules where r.ResponseActions.Any() select r).ToList();
