@@ -142,6 +142,7 @@ False
     <match>||google.co.uk/gen_204</match>
     <match>||google.com.au/generate_204</match>
     <match>||google.com.au/gen_204</match>
+    <match>||google.com.au/client_204</match>
     <actions>
       <python>
         <![CDATA[
