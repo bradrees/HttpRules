@@ -52,6 +52,8 @@ namespace RulesWPF
         private readonly DispatcherTimer _chartUpdate = new DispatcherTimer(DispatcherPriority.Background);
 
         private readonly ObservableCollection<RequestChartPoint> _data = new ObservableCollection<RequestChartPoint>();
+
+        private readonly ObservableCollection<DomainMapPoint> _domainData = new ObservableCollection<DomainMapPoint>();
         
         private readonly Dictionary<string, Icon> _icons = new Dictionary<string, Icon>();
 
@@ -117,9 +119,6 @@ namespace RulesWPF
             this._chartUpdate.Start();
 
             Enumerable.Range(0, 300).Select(r => new RequestChartPoint(0, 0) { Date = DateTime.Now.AddSeconds(-300+r) }).ForEach(this.ChartData.Add);
-
-            this.HeaderChart.DataContext = this.ChartData;
-            this.pnlChart.DataContext = this.ChartData;
         }
 
         #endregion
@@ -144,6 +143,11 @@ namespace RulesWPF
         public ObservableCollection<RequestChartPoint> ChartData
         {
             get { return _data; }
+        }
+
+        public ObservableCollection<DomainMapPoint> DomainData
+        {
+            get { return _domainData; }
         }
 
         #endregion
@@ -284,6 +288,7 @@ namespace RulesWPF
                 this.ResponseQueue.Enqueue(new ResponseModel { ResponseCode = e.ResponseCode, FullUrl = e.FullUrl, ResponseCodeText = e.ResponseCodeText, Referer = e.Referer });
                 this._sessionCount++;
                 this._maxSessionCount = Math.Max(this._maxSessionCount, this.engine.SessionCount);
+                Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => this.DomainData.Add(new DomainMapPoint(e.ResponseCode, e.Length, new Uri(e.FullUrl).Host))));
             }
         }
 
@@ -494,7 +499,7 @@ namespace RulesWPF
                 this._data.RemoveAt(0);
             }
 
-            this._data.Add(new RequestChartPoint(_sessionCount, Math.Max(this._maxSessionCount, this.engine.SessionCount)));
+            //this._data.Add(new RequestChartPoint(_sessionCount, Math.Max(this._maxSessionCount, this.engine.SessionCount)));
             _sessionCount = 0;
             _maxSessionCount = 0;
         }

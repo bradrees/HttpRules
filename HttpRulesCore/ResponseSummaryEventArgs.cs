@@ -43,6 +43,8 @@ namespace HttpRulesCore
         /// <value>The referer.</value>
         public string Referer { get; set; }
 
+        public long Length { get; set; }
+
         #endregion
     }
 }

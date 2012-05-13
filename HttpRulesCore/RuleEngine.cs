@@ -135,6 +135,10 @@ namespace HttpRulesCore
             catch
             {
             }
+            finally
+            {
+                this._sessionCount = 0;
+            }
         }
 
         /// <summary>
@@ -145,6 +149,7 @@ namespace HttpRulesCore
         /// </param>
         public void Start(string path)
         {
+            this._sessionCount = 0;
             this._path = path;
             this.Rules = Rule.Parse(this._path).ToList();
             this.Rules.ForEach(r => r.ResponseLog = this.ResponseReceived);
@@ -231,7 +236,7 @@ namespace HttpRulesCore
             if (this.ResponseReceived != null)
             {
                 this.ResponseReceived(
-                    session, new ResponseSummaryEventArgs { ResponseCode = session.responseCode, FullUrl = session.fullUrl, ResponseCodeText = session.oResponse.headers.HTTPResponseStatus, Referer = (session.oRequest["Referer"].HasValue() ? session.oRequest["Referer"] : "None") + ", Sessions: " + this.SessionCount });
+                    session, new ResponseSummaryEventArgs { ResponseCode = session.responseCode, FullUrl = session.fullUrl, ResponseCodeText = session.oResponse.headers.HTTPResponseStatus, Referer = (session.oRequest["Referer"].HasValue() ? session.oRequest["Referer"] : "None") + ", Sessions: " + this.SessionCount, Length = session.ResponseBody.LongLength });
             }
         }
 
