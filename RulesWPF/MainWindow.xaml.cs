@@ -63,7 +63,7 @@ namespace RulesWPF
 
         private int _maxSessionCount;
 
-        private bool canClose;
+        private bool _canClose;
 
         #endregion
 
@@ -126,7 +126,7 @@ namespace RulesWPF
 
         void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if(!this.canClose)
+            if(!this._canClose)
             {
                 e.Cancel = true;
                 this.Visibility = Visibility.Collapsed;
@@ -204,7 +204,7 @@ namespace RulesWPF
         /// </param>
         private void Close(object sender, RoutedEventArgs e)
         {
-            this.canClose = true;
+            this._canClose = true;
             this.Close();
         }
 
@@ -301,7 +301,7 @@ namespace RulesWPF
                 this.ResponseQueue.Enqueue(new ResponseModel { ResponseCode = e.ResponseCode, FullUrl = e.FullUrl, ResponseCodeText = e.ResponseCodeText, Referer = e.Referer });
                 this._sessionCount++;
                 this._maxSessionCount = Math.Max(this._maxSessionCount, this.engine.SessionCount);
-                Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => this.DomainData.Add(new DomainMapPoint(e.ResponseCode, e.Length, new Uri(e.FullUrl).Host))));
+                // Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => this.DomainData.Add(new DomainMapPoint(e.ResponseCode, e.Length, new Uri(e.FullUrl).Host))));
             }
         }
 
