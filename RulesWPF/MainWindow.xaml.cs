@@ -63,6 +63,8 @@ namespace RulesWPF
 
         private int _maxSessionCount;
 
+        private bool canClose;
+
         #endregion
 
         #region Constructors and Destructors
@@ -73,6 +75,7 @@ namespace RulesWPF
         public MainWindow()
         {
             this.InitializeComponent();
+            this.Closing += MainWindowClosing;
 
             this.rulePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), @"HttpRules\Rules.xml");
 
@@ -119,6 +122,15 @@ namespace RulesWPF
             this._chartUpdate.Start();
 
             Enumerable.Range(0, 300).Select(r => new RequestChartPoint(0, 0) { Date = DateTime.Now.AddSeconds(-300+r) }).ForEach(this.ChartData.Add);
+        }
+
+        void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if(!this.canClose)
+            {
+                e.Cancel = true;
+                this.Visibility = Visibility.Collapsed;
+            }
         }
 
         #endregion
@@ -192,6 +204,7 @@ namespace RulesWPF
         /// </param>
         private void Close(object sender, RoutedEventArgs e)
         {
+            this.canClose = true;
             this.Close();
         }
 
@@ -338,8 +351,8 @@ namespace RulesWPF
         /// </param>
         private void MainWindowIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            this.Top = AppBarFunctions.GetScreenHeight(this) - this.RestoreBounds.Height;
-            this.Left = SystemParameters.PrimaryScreenWidth - this.RestoreBounds.Width;
+            this.Top = AppBarFunctions.GetScreenHeight(this) - this.RestoreBounds.Height - 4;
+            this.Left = SystemParameters.PrimaryScreenWidth - this.RestoreBounds.Width - 4;
         }
 
         /// <summary>
@@ -451,23 +464,9 @@ namespace RulesWPF
         /// </param>
         private void TbMouseLeftButtonUp(object sender, RoutedEventArgs e)
         {
-            if (this.Topmost)
-            {
-                switch (this.Visibility)
-                {
-                    case Visibility.Visible:
-                        this.Visibility = Visibility.Collapsed;
-                        break;
-                    case Visibility.Collapsed:
-                        this.Visibility = Visibility.Visible;
-                        this.Activate();
-                        break;
-                }
-            }
-            else
-            {
-                this.Topmost = true;
-            }
+            this.Topmost = true;
+            this.Visibility = Visibility.Visible;
+            this.Activate();
         }
 
         /// <summary>
