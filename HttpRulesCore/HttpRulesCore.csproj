@@ -62,6 +62,7 @@
     <Compile Include="Actions\BreakAction.cs" />
     <Compile Include="Actions\CacheAction.cs" />
     <Compile Include="Actions\CookieAction.cs" />
+    <Compile Include="Actions\BlockHoursAction.cs" />
     <Compile Include="Actions\HeaderAction.cs" />
     <Compile Include="Actions\HeaderValueFormat.cs" />
     <Compile Include="Actions\HttpsEverywhereAction.cs" />

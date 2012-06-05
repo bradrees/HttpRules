@@ -13,6 +13,15 @@
       </response>
     </actions>
   </rule>
+  <rule name="Go to bed" enabled="true" logEnabled="true">
+    <matches>
+      <match>||reddit.com</match>
+    </matches>
+    <actions>
+      <blockhours starthour="22" endhour="23.99" />
+      <blockhours starthour="7" endhour="8" />
+    </actions>
+  </rule>
   <rule name="Python Example Block" enabled="true" logEnabled="true">
     <matches>
       <match>||www.example.com</match>
