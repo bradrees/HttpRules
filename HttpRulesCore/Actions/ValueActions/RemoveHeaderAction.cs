@@ -21,7 +21,7 @@ namespace HttpRulesCore.Actions.ValueActions
     /// <summary>
     /// The remove header action.
     /// </summary>
-    public class RemoveHeaderAction : ValueAction
+    public class HeaderAction : ValueAction
     {
         #region Properties
 

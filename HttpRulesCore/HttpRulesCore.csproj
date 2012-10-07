@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FiddlerCore4, Version=2.3.4.0, Culture=neutral, PublicKeyToken=67cb91587178ac5a, processorArchitecture=MSIL">
+    <Reference Include="FiddlerCore4, Version=4.3.7.5, Culture=neutral, PublicKeyToken=67cb91587178ac5a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Referenced Assemblies\FiddlerCore4.dll</HintPath>
     </Reference>
@@ -63,6 +63,7 @@
     <Compile Include="Actions\CacheAction.cs" />
     <Compile Include="Actions\CookieAction.cs" />
     <Compile Include="Actions\BlockHoursAction.cs" />
+    <Compile Include="Actions\AddHeaderAction.cs" />
     <Compile Include="Actions\HeaderAction.cs" />
     <Compile Include="Actions\HeaderValueFormat.cs" />
     <Compile Include="Actions\HttpsEverywhereAction.cs" />

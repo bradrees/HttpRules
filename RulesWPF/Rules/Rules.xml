@@ -306,6 +306,12 @@ False
       </header>
     </actions>
   </rule>
+  <rule name="Do Not Track header" enabled="true" logEnabled="false">
+    <actions>
+      <addHeader name="DNT" value="1">
+      </addHeader>
+    </actions>
+  </rule>
   <rule name="Save Video Files" enabled="true" logEnabled="true">
     <actions>
       <saveFile extensions="mpg,mp4,flv" />
